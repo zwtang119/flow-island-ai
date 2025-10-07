@@ -1,0 +1,16 @@
+
+{
+  "name": "flow-island-server",
+  "version": "0.19.0",
+  "description": "心流静岛 (Flow Island) 本地服务器",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Flow Island Team",
+  "dependencies": {
+    "express": "^4.19.2",
+    "sharp": "^0.33.4"
+  }
+}

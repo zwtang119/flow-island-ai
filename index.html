@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心流静岛 (Flow Island) - 让守护，看得见</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Serif+SC:wght@700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet"></noscript>
+    <style>
+        :root {
+            /* V10.0 "品牌之声" 设计系统 (Web) */
+            
+            /* 色彩 (Color Palette) */
+            --bg-canvas: #FDFDFB;       /* 画布背景 - 温暖的米白 */
+            --bg-main: #FFFFFF;         /* 主要内容背景 - 纯白 */
+            --ink-main: #1C1C1A;        /* 主要文本 - 近似墨黑 */
+            --ink-subtle: #666660;      /* 次要文本 - 暖灰色 */
+            --ink-context: #444440;     /* 上下文文本 - 深灰色 */
+            --stone-subtle: #F0F0ED;    /* subtle背景/边框 - 石灰色 */
+            --accent-serene-sky: #4A6A8F; /* 点缀色 - 宁静的灰蓝色 */
+            --cta-bg: #4A6A8F;          /* CTA按钮背景 */
+            --cta-text: #FFFFFF;        /* CTA按钮文字 */
+
+            /* 字体 (Typography) */
+            --font-body: 'Inter', sans-serif;
+            --font-display: 'Noto Serif SC', serif;
+            
+            /* 布局 (Layout) */
+            --spacing-unit: 8px;
+            --content-width: 800px;
+            --border-radius: 12px;
+
+            /* 阴影 (Shadows) */
+            --shadow-soft: 0 4px 15px rgba(0,0,0,0.04);
+            --shadow-hero: 0 10px 30px rgba(74, 106, 143, 0.1), 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-canvas);
+            color: var(--ink-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .content-wrapper {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 calc(var(--spacing-unit) * 3);
+        }
+
+        /* Language Switcher */
+        .language-switcher-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .language-switcher {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--stone-subtle);
+            border-radius: 20px;
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+            box-shadow: var(--shadow-soft);
+        }
+        .language-switcher .lang-option {
+            padding: 5px 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ink-subtle);
+            border-radius: 15px;
+            transition: all 0.2s ease;
+        }
+        .language-switcher .lang-option.active {
+            background-color: var(--cta-bg);
+            color: var(--cta-text);
+        }
+        .language-switcher .lang-option:not(.active):hover {
+            background-color: var(--stone-subtle);
+        }
+
+        /* Hero Section - V10.0 Redesign */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: calc(var(--spacing-unit) * 6);
+            align-items: center;
+            padding: calc(var(--spacing-unit) * 10) 0;
+            min-height: 80vh;
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                grid-template-columns: 1fr 1fr;
+                min-height: auto;
+                 padding: calc(var(--spacing-unit) * 12) 0;
+            }
+        }
+        
+        .hero-content {
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-content {
+                text-align: left;
+            }
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: 52px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            line-height: 1.4;
+            letter-spacing: 2px;
+            color: var(--ink-main);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--ink-subtle);
+            max-width: 400px;
+            margin: 0 auto 32px;
+            font-weight: 400;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-content p {
+                margin: 0 0 32px 0;
+            }
+            .hero-content h1 {
+                font-size: 60px;
+            }
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background-color: var(--cta-bg);
+            color: var(--cta-text);
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-body);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hero);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-device {
+            width: 380px;
+            height: 165px;
+            background-color: #F8F8F5;
+            border: 1px solid #DFDFD9;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: var(--shadow-hero);
+        }
+        
+        .hero-device::before {
+            content: '';
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border-radius: 11px;
+            border: 1px solid rgba(0,0,0,.08);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,.05);
+        }
+
+        .hero-device canvas {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 8) 0;
+            border-top: 1px solid var(--stone-subtle);
+        }
+
+        header h1 {
+            font-family: var(--font-display);
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            letter-spacing: 1.5px;
+            color: var(--ink-main);
+        }
+        
+        header p {
+            font-size: 20px;
+            color: var(--ink-subtle);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 600;
+        }
+        
+        .section {
+            margin-bottom: calc(var(--spacing-unit) * 14);
+            padding-top: calc(var(--spacing-unit) * 8);
+        }
+
+        .manifesto-section {
+             border-top: 1px solid var(--stone-subtle);
+        }
+        
+        h2 {
+            font-family: var(--font-display);
+            font-size: 34px;
+            text-align: center;
+            margin-bottom: calc(var(--spacing-unit) * 6);
+            font-weight: 700;
+            position: relative;
+            padding-bottom: calc(var(--spacing-unit) * 2);
+            color: var(--ink-main);
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-serene-sky);
+            opacity: 0.4;
+        }
+        
+        .manifesto-section p, .section > p {
+            font-size: 17px;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            text-align: center;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .manifesto-section .manifesto-creed {
+            font-family: var(--font-display);
+            font-size: 22px;
+            line-height: 1.9;
+            color: var(--ink-context);
+            margin-top: calc(var(--spacing-unit) * 6);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .manifesto-section strong {
+            color: var(--accent-serene-sky);
+            font-weight: 600;
+        }
+        
+        .section-break {
+            height: 1px;
+            background-color: var(--stone-subtle);
+            margin: calc(var(--spacing-unit) * 12) auto;
+            width: 100%;
+        }
+
+        .showcase-card {
+            background: var(--bg-main);
+            border: 1px solid var(--stone-subtle);
+            border-radius: var(--border-radius);
+            padding: calc(var(--spacing-unit) * 5);
+            margin-bottom: calc(var(--spacing-unit) * 6);
+            box-shadow: var(--shadow-soft);
+            animation: fadeIn .6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+        
+        .persona-header {
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .persona-header h3 {
+            font-family: var(--font-body);
+            font-size: 24px;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+
+        .persona-header .persona-desc {
+            font-size: 16px;
+            color: var(--ink-subtle);
+        }
+        
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: calc(var(--spacing-unit) * 5);
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .showcase-grid {
+                grid-template-columns: 1fr 300px;
+            }
+        }
+        
+        .showcase-step {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .showcase-step h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink-main);
+            margin: 0 0 calc(var(--spacing-unit) * 1.5);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .showcase-step h4::before {
+            content: '';
+            width: 12px;
+            height: 2px;
+            background-color: var(--accent-serene-sky);
+            margin-right: calc(var(--spacing-unit) * 1);
+            opacity: 0.6;
+        }
+
+        .showcase-step code {
+            display: block;
+            background: var(--stone-subtle);
+            padding: calc(var(--spacing-unit) * 2);
+            border-radius: 6px;
+            font-family: 'Menlo', 'Consolas', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #EAEAE2;
+            color: var(--ink-subtle);
+        }
+        
+        .device-preview {
+            width: 296px;
+            height: 128px;
+            background-color: #F8F8F5;
+            border: 1px solid #DFDFD9;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+         .device-preview::before {
+            content: '';
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,.08);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+         }
+
+        .device-preview canvas {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Exploration Version Specific Device Preview */
+        .device-preview-explore {
+            width: 250px;
+            height: 250px;
+            padding: 25px;
+        }
+
+        .device-preview-explore canvas {
+            width: 200px;
+            height: 200px;
+        }
+
+        @media (min-width: 768px) {
+            .showcase-grid-explore {
+                grid-template-columns: 1fr 250px;
+            }
+        }
+        
+        .philosophy-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: calc(var(--spacing-unit) * 2);
+            font-family: var(--font-body);
+            font-size: 16px;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            text-align: center;
+            flex-basis: 150px;
+        }
+        
+        .flow-icon {
+            font-size: 40px;
+            line-height: 1;
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .flow-step .step-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+        .flow-step .step-desc {
+            font-size: 14px;
+            color: var(--ink-subtle);
+            line-height: 1.5;
+        }
+        
+        .flow-arrow {
+            color: var(--accent-serene-sky);
+            font-weight: 600;
+            font-size: 28px;
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            align-self: flex-start;
+            margin-top: 30px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: calc(var(--spacing-unit) * 4);
+            background: var(--bg-main);
+            border: 1px solid var(--stone-subtle);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+        .comparison-table th, .comparison-table td {
+            padding: calc(var(--spacing-unit) * 2.5);
+            text-align: left;
+            border-bottom: 1px solid var(--stone-subtle);
+        }
+        .comparison-table th {
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 600;
+            background-color: #F8F8F5;
+        }
+        .comparison-table td {
+            font-size: 15px;
+        }
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comparison-table td:nth-child(1) {
+            font-weight: 600;
+            color: var(--ink-main);
+            width: 25%;
+        }
+        .comparison-table td:nth-child(2) {
+            color: var(--accent-serene-sky);
+            font-weight: 600;
+        }
+         .comparison-table td:nth-child(3) {
+            color: var(--ink-subtle);
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: calc(var(--spacing-unit) * 6) 0;
+            margin-top: calc(var(--spacing-unit) * 8);
+        }
+        
+        .cta-section h2 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .cta-section p {
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--ink-subtle);
+            letter-spacing: 1px;
+        }
+
+        .expander-section {
+            text-align: center;
+            border-top: 1px solid var(--stone-subtle);
+            background-color: rgba(240, 240, 237, 0.6);
+            padding: calc(var(--spacing-unit) * 8) calc(var(--spacing-unit) * 3);
+            margin-top: calc(var(--spacing-unit) * 8);
+            margin-bottom: calc(var(--spacing-unit) * 14);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-in-out;
+            background-color: var(--bg-canvas);
+        }
+        
+        .collapsible-content.expanded {
+            max-height: 5000px; /* A large enough value to show all content */
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding-top: calc(var(--spacing-unit) * 4);
+                 padding-bottom: calc(var(--spacing-unit) * 6);
+            }
+             .hero-visual {
+                 order: -1; /* Move image to top on mobile */
+             }
+             .hero-device {
+                width: 320px;
+                height: 138px;
+             }
+            .philosophy-flow {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: var(--spacing-unit) 0;
+                margin-top: 0;
+                align-self: center;
+            }
+            .comparison-table {
+                display: block;
+            }
+            .comparison-table thead, .comparison-table tbody, .comparison-table tr {
+                 display: block;
+            }
+            .comparison-table thead {
+                display: none;
+            }
+             .comparison-table tr {
+                border-bottom: 2px solid var(--bg-canvas);
+                padding-bottom: var(--spacing-unit);
+                margin-bottom: var(--spacing-unit);
+             }
+            .comparison-table td {
+                display: block;
+                text-align: left !important;
+                border-bottom: none;
+                padding: calc(var(--spacing-unit) * 1) 0;
+            }
+            .comparison-table td:nth-child(1) {
+                background-color: transparent;
+                font-weight: 700;
+                padding-top: var(--spacing-unit);
+            }
+            .comparison-table td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                margin-right: 10px;
+                display: none;
+            }
+            .comparison-table td:nth-child(2)::before {
+                 content: attr(data-col-title-1);
+                 display: inline-block;
+                 width: 80px;
+                 color: var(--ink-main);
+            }
+            .comparison-table td:nth-child(3)::before {
+                 content: attr(data-col-title-2);
+                 display: inline-block;
+                 width: 80px;
+                 color: var(--ink-main);
+            }
+        }
+    </style>
+<script type="module">
+// --- BILINGUAL SUPPORT ---
+const translations = {
+  en: {
+    pageTitle: "Flow Island - The Calm AI Companion",
+    langToggle: "中文",
+
+    // Hero section
+    heroTitle: "<br>Let Care</br>Be Seen",
+    heroSubtitle: "A gift of peace of mind — for the people who matter most.",
+    heroCTA: "Discover Watch-Over Mode",
+    heroCanvasAlt: "Flow Island device screen rendering preview, showing a family message: 'Dad, it's getting cold. Put on an extra layer.'",
+
+    // Manifesto (Senior)
+    manifestoTitle: "Our Promise: From Heartfelt to Heart-Safe",
+    manifestoP1: "For our elders, a product must not only be easy to use — it must be reliable. We design with warmth, but we build with discipline. From one-minute setup to fail-safe anti-misfire design, every detail reflects our single most important commitment: trust.",
+    manifestoCreedHeader: "We believe:",
+    manifestoCreed1: "Technology’s purpose isn’t to do more — it’s to make people feel more at ease.",
+    manifestoCreed2: "Every voice confirmation is a moment of being understood.",
+    manifestoCreed3: "Every time the screen lights up, it says: “Someone’s thinking of me.”",
+
+    // Showcase (Senior)
+    showcaseTitle: "A Digital Family Member — Quietly Watching Over Every Moment",
+    showcaseSubtitle: "By simplifying interactions and focusing on what truly matters, Flow Island becomes a quiet, reliable companion — guarding health, safety, and the bonds of love.",
+    
+    // Comparison Section
+    comparisonTitle: "Designed for Watchfulness: Senior vs. Explorer Edition",
+    comparisonSubtitle: "Flow Island’s Senior Edition is not a simplified copy — it’s a fundamental re-engineering from first principles, reborn with one purpose: to watch over our elders.",
+    tableHeaderFeature: "Feature",
+    tableHeaderSenior: "Flow Island ・ Senior Edition",
+    tableHeaderExplore: "Flow Island ・ Explorer Edition",
+    featureCoreConcept: "Core Idea",
+    conceptSenior: "Life Watch & Emotional Connection",
+    conceptExplore: "Maker Freedom & Open Innovation",
+    featureScreen: "Display",
+    screenSenior: "2.7” Wide E-Ink (296×128)",
+    screenExplore: "1.54” Square E-Ink (200×200)",
+    featureInteraction: "Interaction",
+    interactionSenior: "Voice-First & One-Touch SOS",
+    interactionExplore: "Four Physical Buttons",
+    featureSpecial: "Key Features",
+    specialSenior: "Side Light Bar, Family Sync, Smart Nightlight",
+    specialExplore: "Open Hardware, Programmable, Community Dials",
+    featureForm: "Form Factor",
+    formSenior: "Phone Clip / Fridge Magnet / Senior ID Card",
+    formExplore: "Wrist-Worn Smartwatch",
+    
+    // Philosophy (Senior)
+    philosophyTitle: "Our Pledge: Simple. Safe. Serene.",
+    philosophySubtitle: "Our mission is to turn cold technology into warm, trustworthy signals of care.",
+    philosophyStep1Title: "Listen & Confirm",
+    philosophyStep1Desc: "Voice input with reassuring feedback",
+    philosophyStep2Title: "Sense & Safeguard",
+    philosophyStep2Desc: "Smart nightlight and one-touch SOS",
+    philosophyStep3Title: "Calm Display",
+    philosophyStep3Desc: "Always-on E-Ink, never intrusive",
+
+    // Expander Section
+    expanderTitle: "Explore the Other Side: For High-Performers",
+    expanderSubtitle: "Flow Island’s story began as a focus companion for high-performance individuals — a tool designed to reclaim attention in a world of distractions. Here lies its technical origin and AI-driven intelligence — the foundation upon which the Senior Edition was born.",
+    expanderButtonOpen: "Learn More About the Explorer Edition",
+    expanderButtonClose: "Collapse Explorer Details",
+    
+    // Exploration Version Content
+    exploreManifestoTitle: "Reclaim Your Focus",
+    exploreManifestoP1: "Smartphones are built for multi-functionality and engagement — the very opposite of focus. Checking your schedule shouldn’t mean unlocking your phone, clearing notifications, and fighting for mental bandwidth.",
+    exploreManifestoP2: "We refused to compete for your attention. Instead, we built a calm corner for information — an island of focus.",
+    exploreVisionTitle: "Core Vision: Speak It. See It.",
+    explorePhilosophyTitle: "Design Philosophy: From Noise to Signal",
+    explorePhilosophySubtitle: "Our core mission is to filter out the world’s noise — and reveal only what truly matters.",
+    explorePhilosophyStep1Title: "1. Frictionless Input",
+    explorePhilosophyStep1Desc: "Speak anytime, anywhere",
+    explorePhilosophyStep2Title: "2. AI Prioritization",
+    explorePhilosophyStep2Desc: "Understand what’s urgent and what’s not",
+    explorePhilosophyStep3Title: "3. Persistent Focus Anchor",
+    explorePhilosophyStep3Desc: "Keep key insights always visible",
+    
+    // Footer
+    footerTitle: "We don’t build gadgets. We build companions.",
+    footerSubtitle: "Welcome to the Island.",
+
+    // Dynamic Labels in Cards & Canvas
+    userInputLabel: "User Input (Voice or Family Remote)",
+    aiResponseLabel: "Reassuring Echo (Device Response)",
+    voiceInputLabel: "Voice Input",
+    prioritizationLabel: "AI Prioritization",
+    priorityLabel: "Priority",
+    importantLabel: "High",
+    secondaryLabel: "Todo",
+    mobileColSeniorLabel: "Senior:",
+    mobileColExploreLabel: "Explorer:",
+    canvasLaterLabel: "Later",
+    canvasTodoLabel: "Todo",
+    canvasEmptyState: "Enjoy your Flow time",
+    canvasScamAlert: "⚠️ Beware of scam calls, do not transfer money"
+  },
+  zh: {
+    pageTitle: "心流静岛 (Flow Island) - 让守护，看得见",
+    langToggle: "EN",
+    heroTitle: "<br>让守护</br>看得见",
+    heroSubtitle: "一份安心的礼物，送给最重要的家人。",
+    heroCTA: "了解守望功能",
+    heroCanvasAlt: "心流静岛设备屏幕渲染预览，显示家人留言：降温了 多穿衣服",
+    manifestoTitle: "我们的承诺：从动心到放心",
+    manifestoP1: "对长辈而言，一个产品不仅要好用，更要可靠。我们不仅用温暖的设计打动人心，更用严谨的工程承诺守护安全。从“一分钟可用”的极简设置，到“误触不惊扰家人”的安心设计，每一个细节，都是我们对“放心”二字的郑重承诺。",
+    manifestoCreedHeader: "我们相信：",
+    manifestoCreed1: "科技的意义，不在于能做更多，而在于让人更安心。",
+    manifestoCreed2: "每一次语音确认，是一次“被理解”的瞬间。",
+    manifestoCreed3: "每一块屏幕亮起，是一次“有人在想我”的证明。",
+    showcaseTitle: "一个“数字家人”，守望每一刻",
+    showcaseSubtitle: "通过简化交互、聚焦核心需求，“心流静岛”希望能成为长者们可靠的伙伴，守望他们的健康、安全与亲情连接。",
+    comparisonTitle: "为守望而生：敬老版与探索版对比",
+    comparisonSubtitle: "“心流静島”敬老版并非探索硬件的简单修改，而是从第一性原理出发，为守望长辈而进行的彻底再造。",
+    tableHeaderFeature: "特性",
+    tableHeaderSenior: "心流静岛・敬老版",
+    tableHeaderExplore: "心流静岛・探索版",
+    featureCoreConcept: "核心理念",
+    conceptSenior: "生命守望 & 情感连接",
+    conceptExplore: "极客创造 & 开源定制",
+    featureScreen: "屏幕规格",
+    screenSenior: "2.7英寸宽屏 (296x128)",
+    screenExplore: "1.54英寸方屏 (200x200)",
+    featureInteraction: "主要交互",
+    interactionSenior: "语音优先 & 一键呼救",
+    interactionExplore: "四按键操作",
+    featureSpecial: "特色功能",
+    specialSenior: "高亮侧边灯条、家人远程同步、智能夜灯",
+    specialExplore: "开源硬件、可编程、海量社区表盘",
+    featureForm: "产品形态",
+    formSenior: "手机背夹/冰箱贴/敬老卡套",
+    formExplore: "腕上智能手表",
+    philosophyTitle: "我们的承诺：简单，安全，宁静",
+    philosophySubtitle: "我们的核心任务，是将冰冷的科技，转化为温暖、可靠、值得信赖的信号。",
+    philosophyStep1Title: "聆听与确认",
+    philosophyStep1Desc: "语音输入，安心回声",
+    philosophyStep2Title: "感知与守望",
+    philosophyStep2Desc: "智能夜灯，一键呼救",
+    philosophyStep3Title: "宁静的呈现",
+    philosophyStep3Desc: "墨水屏常亮，从不错过",
+    expanderTitle: "探索另一面：为高效能人士而生的探索版",
+    expanderSubtitle: "“心流静岛”的故事始于一个为高效能人士打造的专注力工具。这里展示了它的技术前身与核心AI能力，以及项目完整的演进故事。",
+    expanderButtonOpen: "了解探索版详情",
+    expanderButtonClose: "收起探索版详情",
+    exploreManifestoTitle: "夺回你的专注力",
+    exploreManifestoP1: "智能手机是为<strong>多功能、高互动、沉浸式体验</strong>而设计的，这恰恰是“便捷获取专注信息”的反面。想看一眼日程，需要经历解锁、清理通知、找到并打开App等一系列操作。在此过程中，注意力极易被其他信息流打断。",
+    exploreManifestoP2: "我们不想在手机的“注意力黑洞”里和成千上万个App争夺用户的眼球。我们选择创造一个专属的、宁静的、专注的信息角落——<strong>一个“信息静岛”</strong>。",
+    exploreVisionTitle: "核心愿景：开口即记事，要事自动浮现",
+    explorePhilosophyTitle: "设计哲学：从噪音到信号",
+    explorePhilosophySubtitle: "我们的核心任务，是为您过滤整个世界的“噪音”，只呈现最重要的“信号”。",
+    explorePhilosophyStep1Title: "1. 无摩擦记录",
+    explorePhilosophyStep1Desc: "随时随地的语音输入",
+    explorePhilosophyStep2Title: "2. 智能优先级排序",
+    explorePhilosophyStep2Desc: "AI判定事件的轻重缓急",
+    explorePhilosophyStep3Title: "3. 专注锚点",
+    explorePhilosophyStep3Desc: "墨水屏呈现最重要的事",
+    footerTitle: "我们不造设备，我们造的是陪伴。",
+    footerSubtitle: "欢迎登岛。",
+    userInputLabel: "用户输入 (语音或家人远程)",
+    aiResponseLabel: "安心回声 (设备回应)",
+    voiceInputLabel: "语音输入 (Voice Input)",
+    prioritizationLabel: "智能优先级排序 (Intelligent Prioritization)",
+    priorityLabel: "优先级",
+    importantLabel: "重要",
+    secondaryLabel: "次要",
+    mobileColSeniorLabel: "敬老版:",
+    mobileColExploreLabel: "探索版:",
+    canvasLaterLabel: "稍后",
+    canvasTodoLabel: "待办",
+    canvasEmptyState: "享受您的心流时间",
+    canvasScamAlert: "⚠️ 陌生电话不轻信，转账汇款是骗局"
+  }
+};
+let currentLang = 'zh';
+
+// --- SENIOR VERSION SCRIPT ---
+const seniorLAYOUT = {
+    PADDING: 12,
+    FONT_INTER_S: "400 18px 'Inter', sans-serif",
+    FONT_INTER_M: "600 22px 'Inter', sans-serif",
+    FONT_INTER_L_BOLD: "700 48px 'Inter', sans-serif",
+    FONT_INTER_XL_BOLD: "600 32px 'Inter', sans-serif",
+    FONT_NOTO_L_BOLD: "700 38px 'Noto Serif SC', serif",
+    FONT_ALERT: "700 20px 'Inter', sans-serif",
+    COLORS: {
+        BLACK: '#000000',
+        WHITE: '#FFFFFF',
+        DARK_GREY: '#1C1C1A',
+        CONTEXT_GREY: '#444440'
+    },
+    LINE_HEIGHTS: {
+        ALERT: 24,
+        SUMMARY: 38,
+        HERO: 46,
+    }
+};
+
+function getISODate(baseDate, time) {
+    const [hours, minutes] = time.split(':');
+    const d = new Date(baseDate);
+    d.setHours(hours, minutes, 0, 0);
+    return d.toISOString();
+}
+
+const tomorrow = new Date();
+tomorrow.setDate(new Date().getDate() + 1);
+
+const dayAfter = new Date();
+dayAfter.setDate(tomorrow.getDate() + 1);
+
+const dayAfterNext = new Date();
+dayAfterNext.setDate(tomorrow.getDate() + 2);
+
+const seniorPersonaData = {
+    wang_jianguo: {
+        type: 'senior',
+        name: {
+            zh: "王建国 (65岁) - 「积极的日程管理者」",
+            en: "Jianguo Wang (65) - 'The Active Planner'"
+        },
+        desc: {
+            zh: "刚退休，生活依然忙碌。他需要一个安静的助手来管理日程，更需要确认设备“听懂了”，这让他感到“一切尽在掌握”。",
+            en: "Recently retired, yet still busy. He needs a quiet helper to manage his days — and a reassuring voice to confirm: “Got it.” That single confirmation brings a sense of calm control."
+        },
+        voice_input: {
+            zh: "提醒我，明天上午九点半要去社区中心参加志愿活动。",
+            en: "“Remind me — community volunteer meeting tomorrow at 9:30 a.m.”"
+        },
+        ai_response: {
+            zh: "“好的，记下了，明天上午九点半，社区志愿活动。”",
+            en: "“Got it. Tomorrow at 9:30 — community volunteer event.”"
+        },
+        tasks: [
+            {"uid":"senior-65-q1-002","time":"16:00", summary: {zh:"接孙女放学", en:"Pick up granddaughter"},"quadrant":1, "start": getISODate(tomorrow, '16:00')},
+            {"uid":"senior-65-q1-001","time":"09:30", summary: {zh:"社区志愿活动", en:"Community volunteer activity"},"quadrant":1, "start": getISODate(dayAfter, '09:30')},
+            {"uid":"senior-65-q2-001","time":"19:00", summary: {zh:"老战友聚会", en:"Old comrades' reunion"},"quadrant":2, "start": getISODate(dayAfterNext, '19:00')}
+        ].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+    },
+    li_shuzhen: {
+        type: 'senior',
+        name: {
+            zh: "李淑珍 (75岁) - 「可靠的卫士」",
+            en: "Shuzhen Li (75) - 'The Reliable Guardian'"
+        },
+        desc: {
+            zh: "她的世界以家为中心，需要一个能主动关怀她的伙伴。设备不仅是日程板，更是能在深夜为她亮起一盏灯、在危急时一键呼救的“守望者”。",
+            en: "Her world revolves around home. The device isn’t just a calendar — it’s a gentle companion that can light the night, and a life-saving guardian in moments of danger."
+        },
+        voice_input: {
+            zh: "（由家人远程设置）上午九点吃降压药，十点去阳台晒晒太阳。晚上八点提醒她给我打个视频电话。",
+            en: "(Family Remote Input) “9:00 a.m. — take blood pressure meds. 10:00 — get some sun on the balcony. 8:00 p.m. — remind Mom to video call me.”"
+        },
+        tasks: [
+            {"uid":"senior-75-q2-001","time":"待办", summary: {zh:"陌生电话不轻信", en:"Don't trust strange calls"},"quadrant":2,"start": getISODate(tomorrow, '08:00')},
+            {"uid":"senior-75-q1-001","time":"09:00", summary: {zh:"服用降压药", en:"Take blood pressure medicine"},"quadrant":1,"start": getISODate(tomorrow, '09:00')},
+            {"uid":"senior-75-q1-002","time":"10:00", summary: {zh:"阳台晒太阳", en:"Sunbathe on the balcony"},"quadrant":1,"start": getISODate(tomorrow, '10:00')},
+            {"uid":"senior-75-q2-003","time":"夜间", summary: {zh:"智能夜灯已启动", en:"Smart night light activated"},"quadrant":2,"start": getISODate(tomorrow, '23:00')},
+            {"uid":"senior-75-q2-002","time":"20:00", summary: {zh:"和女儿视频", en:"Video call with daughter"},"quadrant":2,"start": getISODate(tomorrow, '20:00')}
+        ].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+    },
+    zhang_dechang: {
+        type: 'senior',
+        name: {
+            zh: "张德昌 (85岁) - 「被守望的情感伴侣」",
+            en: "Dechang Zhang (85) - 'The Emotional Lighthouse'"
+        },
+        desc: {
+            zh: "对他来说，设备不再是工具，而是一个情感的窗口。家人温暖的留言被设备“复述”，仿佛亲人就在耳边。这是‘我被记得’的慰藉。",
+            en: "For him, it’s no longer a tool — it’s a window to affection. Messages from family reappear softly on the screen, a reminder that he’s remembered."
+        },
+        voice_input: {
+            zh: "（女儿留言）‘爸，今天降温了，记得多穿一件衣服。下午我来看您。’",
+            en: "(Family Message) “Dad, it’s getting cold. Put on an extra layer — I’ll visit this afternoon.”"
+        },
+        ai_response: {
+            zh: "“好的，已经把您的关心显示在爸爸的屏幕上了。”",
+            en: "“Message displayed — your daughter’s love is right here.”"
+        },
+        tasks: [
+            {"uid":"senior-85-q1-001","time":"明天", summary: {zh:"女儿下午来看您", en:"Daughter is coming this afternoon"},"quadrant":1,"start": getISODate(tomorrow, '10:30')},
+            {"uid":"senior-85-q2-001","time":"待办", summary: {zh:"降温了 多穿衣服", en:"It's cold, wear more clothes"},"quadrant":2,"start": getISODate(tomorrow, '10:31')}
+        ].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+    }
+};
+
+function selectSeniorEventsForDisplay(tasks) {
+    if (!tasks || tasks.length === 0) {
+        return { focus: null, context: null, todo: null };
+    }
+    const now = new Date();
+    const futureEvents = tasks.filter(e => new Date(e.start) >= now);
+    
+    const importantTimedEvents = futureEvents
+        .filter(e => e.time !== "待办" && e.time !== "现在" && e.time !== "夜间" && e.time !== "明天")
+        .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+    const importantTodoEvents = futureEvents
+        .filter(e => e.time === "待办")
+        .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+    const specialEvent = tasks.find(e => e.time === "现在" || e.time === "夜间" || e.time === "明天");
+    
+    let focusEvent = specialEvent || importantTimedEvents[0] || null;
+    let todoEvent = importantTodoEvents[0] || null;
+
+    const specialTodo = tasks.find(t => t.summary.zh === "陌生电话不轻信");
+    if (specialTodo) {
+        todoEvent = specialTodo;
+    }
+    
+    let contextEvent = importantTimedEvents.find(e => e.uid !== focusEvent?.uid) || null;
+
+    return { focus: focusEvent, context: contextEvent, todo: todoEvent };
+}
+
+function _getWrappedLines(ctx, text, maxWidth) {
+    const lines = [];
+    if (!text) return lines;
+    
+    let currentLine = '';
+    for (const char of text) {
+        const testLine = currentLine + char;
+        if (ctx.measureText(testLine).width > maxWidth && currentLine !== '') {
+            lines.push(currentLine);
+            currentLine = char;
+        } else {
+            currentLine = testLine;
+        }
+    }
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+    return lines;
+}
+
+async function renderSeniorImageOnCanvas(canvas, tasks) {
+    const { focus, context, todo } = selectSeniorEventsForDisplay(tasks);
+    const ctx = canvas.getContext('2d');
+    
+    await document.fonts.ready;
+    ctx.imageSmoothingEnabled = false;
+
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ctx.fillStyle = seniorLAYOUT.COLORS.WHITE;
+    ctx.fillRect(0, 0, W, H);
+    
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    if (todo && todo.summary.zh === "陌生电话不轻信") {
+        ctx.fillStyle = seniorLAYOUT.COLORS.DARK_GREY;
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = seniorLAYOUT.COLORS.WHITE;
+        ctx.font = seniorLAYOUT.FONT_ALERT;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const text = translations[currentLang].canvasScamAlert;
+        const lines = _getWrappedLines(ctx, text, W - seniorLAYOUT.PADDING * 2);
+        const totalTextHeight = lines.length * seniorLAYOUT.LINE_HEIGHTS.ALERT;
+        const startY = (H - totalTextHeight) / 2 + seniorLAYOUT.LINE_HEIGHTS.ALERT / 2;
+        for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], W / 2, startY + (i * seniorLAYOUT.LINE_HEIGHTS.ALERT));
+        }
+        return;
+    }
+    
+    if (tasks.some(t => t.uid.startsWith('senior-85'))) {
+         const mainTask = tasks.find(t => t.summary.zh === "降温了 多穿衣服") || tasks[0];
+         ctx.textAlign = 'center';
+         ctx.textBaseline = 'middle';
+         if (mainTask) {
+            ctx.fillStyle = seniorLAYOUT.COLORS.BLACK;
+            ctx.font = seniorLAYOUT.FONT_NOTO_L_BOLD;
+            
+            const lines = _getWrappedLines(ctx, mainTask.summary[currentLang], W - seniorLAYOUT.PADDING * 2);
+            const totalHeight = lines.length * seniorLAYOUT.LINE_HEIGHTS.HERO;
+            const startY = (H - totalHeight) / 2 + seniorLAYOUT.LINE_HEIGHTS.HERO / 2;
+            
+            for(let i=0; i < lines.length; i++){
+                ctx.fillText(lines[i], W/2, startY + i * seniorLAYOUT.LINE_HEIGHTS.HERO);
+            }
+         }
+         return;
+    }
+
+    if (focus) {
+         if (focus.summary.zh.includes("夜灯已启动")) { 
+            ctx.fillStyle = seniorLAYOUT.COLORS.BLACK;
+            ctx.textAlign = 'center';
+            ctx.font = seniorLAYOUT.FONT_INTER_M;
+            const lines = _getWrappedLines(ctx, `🌙 ${focus.summary[currentLang]}`, W - seniorLAYOUT.PADDING * 2);
+            const yPos = H / 2;
+            ctx.textBaseline = 'middle';
+            for(let i=0; i<lines.length; i++){
+                 ctx.fillText(lines[i], W / 2, yPos + i * 26);
+            }
+         } else {
+            ctx.fillStyle = seniorLAYOUT.COLORS.BLACK;
+            ctx.textBaseline = 'middle';
+            
+            ctx.font = seniorLAYOUT.FONT_INTER_L_BOLD;
+            const timeText = focus.time;
+            const timeMetrics = ctx.measureText(timeText);
+            const blockCenterY = (H - 30) / 2;
+            
+            ctx.fillText(timeText, seniorLAYOUT.PADDING, blockCenterY);
+
+            ctx.font = seniorLAYOUT.FONT_INTER_XL_BOLD;
+            const summaryX = seniorLAYOUT.PADDING + timeMetrics.width + 16;
+            const summaryMaxWidth = W - summaryX - seniorLAYOUT.PADDING;
+            const summaryLines = _getWrappedLines(ctx, focus.summary[currentLang], summaryMaxWidth).slice(0, 2);
+            const totalSummaryHeight = summaryLines.length * seniorLAYOUT.LINE_HEIGHTS.SUMMARY;
+            const summaryStartY = blockCenterY - totalSummaryHeight / 2 + seniorLAYOUT.LINE_HEIGHTS.SUMMARY / 2;
+
+            for (let i = 0; i < summaryLines.length; i++) {
+                ctx.fillText(summaryLines[i], summaryX, summaryStartY + (i * seniorLAYOUT.LINE_HEIGHTS.SUMMARY));
+            }
+         }
+    } else {
+        ctx.fillStyle = seniorLAYOUT.COLORS.BLACK;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = seniorLAYOUT.FONT_INTER_M;
+        const text = translations[currentLang].canvasEmptyState;
+        ctx.fillText(text, W / 2, H/2);
+    }
+
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+    if (context) {
+        ctx.fillStyle = seniorLAYOUT.COLORS.CONTEXT_GREY; 
+        ctx.font = seniorLAYOUT.FONT_INTER_S;
+        const laterLabel = translations[currentLang].canvasLaterLabel;
+        const text = `${laterLabel}: ${context.time} ${context.summary[currentLang]}`;
+        const lines = _getWrappedLines(ctx, text, W - seniorLAYOUT.PADDING * 2).slice(0, 1);
+        if(lines.length > 0) {
+             ctx.fillText(lines[0], seniorLAYOUT.PADDING, H - seniorLAYOUT.PADDING - 20);
+        }
+    }
+}
+
+function generateSeniorPersonaCards(personaKeys, containerElement, lang) {
+    personaKeys.forEach(key => {
+        const data = seniorPersonaData[key];
+        if (!data) return;
+
+        const card = document.createElement('div');
+        card.className = 'showcase-card';
+        card.setAttribute('role', 'article');
+        card.setAttribute('aria-labelledby', `persona-heading-${key}`);
+
+        let aiResponseHtml = '';
+        if (data.ai_response) {
+            aiResponseHtml = `
+                <div class="showcase-step">
+                    <h4>${translations[lang].aiResponseLabel}</h4>
+                    <code>${data.ai_response[lang]}</code>
+                </div>
+            `;
+        }
+
+        card.innerHTML = `
+            <div class="persona-header">
+                <h3 id="persona-heading-${key}">${data.name[lang]}</h3>
+                <p class="persona-desc">${data.desc[lang]}</p>
+            </div>
+            <div class="showcase-grid">
+                <div class="showcase-flow">
+                    <div class="showcase-step">
+                        <h4>${translations[lang].userInputLabel}</h4>
+                        <code>${data.voice_input[lang]}</code>
+                    </div>
+                    ${aiResponseHtml}
+                </div>
+                <div class="showcase-result">
+                     <div class="device-preview">
+                         <canvas id="canvas-${key}" width="296" height="128" role="img" aria-roledescription="screenshot" aria-label="${translations[lang].heroCanvasAlt}"></canvas>
+                     </div>
+                </div>
+            </div>
+        `;
+        containerElement.appendChild(card);
+        const canvas = document.getElementById(`canvas-${key}`);
+        renderSeniorImageOnCanvas(canvas, data.tasks);
+    });
+}
+
+// --- EXPLORATION VERSION SCRIPT ---
+const explorePersonaData = {
+    tang_zhiwei: {
+        name: {
+            zh: "唐志伟 - 清华大学博士生",
+            en: "David - PhD Student, Tsinghua University"
+        },
+        desc: {
+            zh: "在繁重的学术压力下，他的专注力是其最宝贵的资产。",
+            en: "In the pressure of academia, focus is his most precious asset."
+        },
+        voice_input: {
+            zh: "最重要的事，会议论文最终版明天晚上就截止了！上午十点要和张辉教授紧急讨论一下数据，还有，晚上七点得开始准备周四的组会报告。对了，之后得开始准备AIAgent课题的文献综述了。",
+            en: "The final paper is due tomorrow night. Meet Prof. Zhang at 10 a.m. to review data. Prep for Thursday’s group meeting at 7 p.m. And start reading for the AI Agent survey."
+        },
+        tasks: [
+            {"uid":"persona-phd-q1-001","time":"23:59", summary:{zh:"会议论文最终版提交截止", en:"Conf paper final ver due"}, "quadrant":1, "start": "2024-11-05T23:59:00Z"},
+            {"uid":"persona-phd-q1-002","time":"10:00", summary:{zh:"与张辉教授紧急讨论实验数据问题", en:"Urgent mtg w/ Prof. Zhang"}, "quadrant":1, "start": "2024-10-26T10:00:00Z"},
+            {"uid":"persona-phd-q2-001","time":"19:00", summary:{zh:"准备周四Agent课题组的组会报告", en:"Prep Thurs Agent mtg"}, "quadrant":2, "start": "2024-10-29T19:00:00Z"},
+            {"uid":"persona-phd-q2-002","time":"待办", summary:{zh:"为AIAgent课题准备文献综述", en:"Prep AIAgent lit review"}, "quadrant":2, "start": "2024-11-08T09:00:00Z"}
+        ].sort((a, b) => new Date(a.start) - new Date(b.start))
+    },
+    li_xiangyu: {
+        name: {
+            zh: "李翔宇 - AI高级工程师",
+            en: "Lee - Senior AI Engineer"
+        },
+        desc: {
+            zh: "在高强度的技术工作中，他需要在紧急故障和长期规划之间找到平衡点。",
+            en: "Managing chaos between crisis response and long-term planning."
+        },
+        voice_input: {
+            zh: "提醒我，上午九点半要向David紧急汇报NLUI调度系统的问题，下午两点有个线上P2故障要处理，还有，明天上午九点是AI主板V3的核心芯片选型评审会，这个很重要。",
+            en: "Report NLUI issue to David at 9:30. Handle P2 outage at 2 p.m. And tomorrow at 9, chip review for AI Board V3."
+        },
+        tasks: [
+            {"uid":"persona-v2-q1-001","time":"09:30", summary:{zh:"向David汇报NLUI调度系统延迟问题", en:"Rept NLUI delay to David"}, "quadrant":1, "start": "2024-10-26T09:30:00Z"},
+            {"uid":"persona-v2-q1-002","time":"14:00", summary:{zh:"处理线上服务P2故障 (LLM-高德地图API)", en:"Fix P2 outage (LLM-Maps API)"}, "quadrant":1, "start": "2024-10-26T14:00:00Z"},
+            {"uid":"persona-v2-q2-001","time":"待办", summary:{zh:"AI主板V3核心芯片选型", en:"Prep chip rev for AI Board V3"}, "quadrant":2, "start": "2024-10-27T09:00:00Z"},
+        ].sort((a, b) => new Date(a.start) - new Date(b.start))
+    },
+    chen_yalin: {
+        name: {
+            zh: "陈雅琳 - 市场部负责人",
+            en: "Enya - Head of Marketing"
+        },
+        desc: {
+            zh: "她的挑战是在瞬息万变的市场中，既要应对眼前的舆情，又要为未来布局。",
+            en: "Her challenge: balancing daily urgency with long-term vision."
+        },
+        voice_input: {
+            zh: "上午十点要和CEO紧急复盘小红书数据。下午两点，和核心的KOL渠道伙伴敲定年度合作，这个很重要。哦对了，下个季度市场宣发策略的规划也该提上日程了。",
+            en: "10 a.m. meeting with CEO to review campaign metrics. 2 p.m. finalize annual deals with KOL partners. Also start planning next quarter’s PR strategy."
+        },
+        tasks: [
+             {"uid":"persona-mkt-q1-001","time":"10:00", summary:{zh:"与CEO紧急复盘小红书预热笔记数据", en:"CEO mtg: campaign review"}, "quadrant":1, "start": "2024-11-12T10:00:00Z"},
+             {"uid":"persona-mkt-q2-001","time":"待办", summary:{zh:"规划Q1市场宣发策略", en:"Draft Q1 PR plan"}, "quadrant":2, "start": "2024-11-13T09:30:00Z"},
+             {"uid":"persona-mkt-q2-002","time":"14:00", summary:{zh:"与核心KOL渠道伙伴敲定年度合作", en:"Confirm annual KOL partnerships"}, "quadrant":2, "start": "2024-11-12T14:00:00Z"},
+        ].sort((a, b) => new Date(a.start) - new Date(b.start))
+    }
+};
+
+const exploreLAYOUT = {
+    W: 200, H: 200, PADDING: 12,
+    TODO_BAR:   { Y: 0,   H: 50, FONT: "400 14px 'Inter', sans-serif", LINE_HEIGHT: 18, MAX_LINES: 2 },
+    FOCUS_ZONE: { Y: 51,  H: 98,
+        TIME:    { Y: 59, FONT: "700 24px 'Inter', sans-serif" },
+        SUMMARY: { Y: 88, FONT: "600 22px 'Inter', sans-serif", LINE_HEIGHT: 26, MAX_LINES: 2 }
+    },
+    CONTEXT_ZONE: { Y: 150, H: 50, FONT: "400 14px 'Inter', sans-serif", LINE_HEIGHT: 18, MAX_LINES: 2 }
+};
+
+function selectExploreEventsForDisplay(tasks) {
+    if (!tasks || tasks.length === 0) {
+        return { focus: null, context: null, todo: null };
+    }
+    const futureEvents = tasks;
+    
+    const importantTimedEvents = futureEvents
+        .filter(e => e.time !== "待办" && (e.quadrant === 1 || e.quadrant === 2))
+        .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+    const importantTodoEvents = futureEvents
+        .filter(e => e.time === "待办" && (e.quadrant === 1 || e.quadrant === 2))
+        .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+    const focusEvent = importantTimedEvents[0] || null;
+    const contextEvent = importantTimedEvents[1] || null;
+    const todoEvent = importantTodoEvents[0] || null;
+    
+    return { focus: focusEvent, context: contextEvent, todo: todoEvent };
+}
+
+async function renderExploreImageOnCanvas(canvas, tasks) {
+    const { focus, context, todo } = selectExploreEventsForDisplay(tasks);
+    const ctx = canvas.getContext('2d');
+    
+    await document.fonts.ready;
+    ctx.imageSmoothingEnabled = false;
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, exploreLAYOUT.W, exploreLAYOUT.H);
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    if (todo) {
+        ctx.font = exploreLAYOUT.TODO_BAR.FONT;
+        const todoLabel = translations[currentLang].canvasTodoLabel;
+        const text = `${todoLabel}: ${todo.summary[currentLang]}`;
+        const lines = _getWrappedLines(ctx, text, exploreLAYOUT.W - exploreLAYOUT.PADDING * 2).slice(0, exploreLAYOUT.TODO_BAR.MAX_LINES);
+        const totalTextHeight = lines.length * exploreLAYOUT.TODO_BAR.LINE_HEIGHT;
+        const startY = exploreLAYOUT.TODO_BAR.Y + (exploreLAYOUT.TODO_BAR.H - totalTextHeight) / 2;
+        for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], exploreLAYOUT.PADDING, startY + (i * exploreLAYOUT.TODO_BAR.LINE_HEIGHT));
+        }
+    }
+
+    if (focus) {
+        ctx.font = exploreLAYOUT.FOCUS_ZONE.TIME.FONT;
+        ctx.fillText(focus.time, exploreLAYOUT.PADDING, exploreLAYOUT.FOCUS_ZONE.TIME.Y);
+
+        ctx.font = exploreLAYOUT.FOCUS_ZONE.SUMMARY.FONT;
+        const lines = _getWrappedLines(ctx, focus.summary[currentLang], exploreLAYOUT.W - exploreLAYOUT.PADDING * 2).slice(0, exploreLAYOUT.FOCUS_ZONE.SUMMARY.MAX_LINES);
+        for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], exploreLAYOUT.PADDING, exploreLAYOUT.FOCUS_ZONE.SUMMARY.Y + (i * exploreLAYOUT.FOCUS_ZONE.SUMMARY.LINE_HEIGHT));
+        }
+    } else {
+        ctx.textAlign = 'center';
+        ctx.font = "600 18px 'Inter', sans-serif";
+        const yPos = exploreLAYOUT.FOCUS_ZONE.Y + exploreLAYOUT.FOCUS_ZONE.H / 2;
+        ctx.textBaseline = 'middle';
+        const text = translations[currentLang].canvasEmptyState;
+        ctx.fillText(text, exploreLAYOUT.W / 2, yPos);
+        ctx.textBaseline = 'top';
+        ctx.textAlign = 'left';
+    }
+
+    if (context) {
+        ctx.font = exploreLAYOUT.CONTEXT_ZONE.FONT;
+        const laterLabel = translations[currentLang].canvasLaterLabel;
+        const text = `${laterLabel}: ${context.time} ${context.summary[currentLang]}`;
+        const lines = _getWrappedLines(ctx, text, exploreLAYOUT.W - exploreLAYOUT.PADDING * 2).slice(0, exploreLAYOUT.CONTEXT_ZONE.MAX_LINES);
+        const totalTextHeight = lines.length * exploreLAYOUT.CONTEXT_ZONE.LINE_HEIGHT;
+        const startY = exploreLAYOUT.CONTEXT_ZONE.Y + (exploreLAYOUT.CONTEXT_ZONE.H - totalTextHeight) / 2;
+        for (let i = 0; i < lines.length; i++) {
+             ctx.fillText(lines[i], exploreLAYOUT.PADDING, startY + (i * exploreLAYOUT.CONTEXT_ZONE.LINE_HEIGHT));
+        }
+    }
+}
+
+function generateExploreShowcase(lang) {
+    const showcaseContainer = document.getElementById('showcase-container-explore');
+    if(!showcaseContainer) return;
+    
+    const orderedPersona = ['tang_zhiwei', 'li_xiangyu', 'chen_yalin'];
+    orderedPersona.forEach(key => {
+        const data = explorePersonaData[key];
+        if (!data) return;
+
+        const card = document.createElement('div');
+        card.className = 'showcase-card';
+        card.setAttribute('role', 'article');
+        card.setAttribute('aria-labelledby', `persona-heading-${key}`);
+
+        card.innerHTML = `
+            <div class="persona-header">
+                <h3 id="persona-heading-${key}">${data.name[lang]}</h3>
+                <p class="persona-desc">${data.desc[lang]}</p>
+            </div>
+            <div class="showcase-grid showcase-grid-explore">
+                <div class="showcase-flow">
+                    <div class="showcase-step">
+                        <h4>${translations[lang].voiceInputLabel}</h4>
+                        <code>${data.voice_input[lang]}</code>
+                    </div>
+                    <div class="showcase-step">
+                        <h4>${translations[lang].prioritizationLabel}</h4>
+                        <code>${data.tasks.map(t => {
+                            const priorityLabel = (t.quadrant === 1 || t.quadrant === 2) ? translations[lang].importantLabel : translations[lang].secondaryLabel;
+                            return `• (${priorityLabel}) ${t.time} - ${t.summary[lang]}`;
+                        }).join('\n')}</code>
+                    </div>
+                </div>
+                <div class="showcase-result">
+                     <div class="device-preview device-preview-explore" aria-label="${translations[lang].heroCanvasAlt}">
+                         <canvas id="canvas-explore-${key}" width="200" height="200"></canvas>
+                     </div>
+                </div>
+            </div>
+        `;
+        showcaseContainer.appendChild(card);
+        const canvas = document.getElementById(`canvas-explore-${key}`);
+        renderExploreImageOnCanvas(canvas, data.tasks);
+    });
+}
+
+
+// --- INITIALIZATION & LANGUAGE ---
+
+function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.title = translations[lang].pageTitle;
+
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.dataset.langKey;
+        if (translations[lang][key] !== undefined) {
+            el.innerHTML = translations[lang][key];
+        }
+    });
+
+    const seniorsContainer = document.getElementById('showcase-container-seniors');
+    if (seniorsContainer) {
+        seniorsContainer.innerHTML = '';
+        generateSeniorPersonaCards(['wang_jianguo', 'li_shuzhen', 'zhang_dechang'], seniorsContainer, lang);
+    }
+    
+    const exploreContainer = document.getElementById('showcase-container-explore');
+    if (exploreContainer) {
+        exploreContainer.innerHTML = '';
+        generateExploreShowcase(lang);
+    }
+    
+    // Update dynamic button text
+    const toggleButton = document.getElementById('toggle-explore-version');
+    const exploreContent = document.getElementById('explore-version-content');
+    if (toggleButton && exploreContent) {
+        const isExpanded = exploreContent.classList.contains('expanded');
+        toggleButton.textContent = isExpanded ? translations[lang].expanderButtonClose : translations[lang].expanderButtonOpen;
+    }
+    
+    // Update language switcher UI
+    document.getElementById('lang-switcher-zh').classList.toggle('active', lang === 'zh');
+    document.getElementById('lang-switcher-en').classList.toggle('active', lang === 'en');
+    const heroCanvas = document.getElementById('canvas-hero');
+    if(heroCanvas) {
+        renderSeniorImageOnCanvas(heroCanvas, seniorPersonaData.zhang_dechang.tasks);
+    }
+
+    // Update table data labels for mobile
+    const tableSeniorTitle = translations[lang].mobileColSeniorLabel;
+    const tableExploreTitle = translations[lang].mobileColExploreLabel;
+    document.querySelectorAll('.comparison-table td:nth-child(2)').forEach(td => td.setAttribute('data-col-title-1', tableSeniorTitle));
+    document.querySelectorAll('.comparison-table td:nth-child(3)').forEach(td => td.setAttribute('data-col-title-2', tableExploreTitle));
+
+    localStorage.setItem('flow-island-lang', lang);
+}
+
+function initLanguage() {
+    const savedLang = localStorage.getItem('flow-island-lang');
+    const browserLang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+    const langToSet = savedLang || browserLang;
+    setLanguage(langToSet);
+}
+
+
+function initializeApp() {
+    const heroCanvas = document.getElementById('canvas-hero');
+    if(heroCanvas) {
+        renderSeniorImageOnCanvas(heroCanvas, seniorPersonaData.zhang_dechang.tasks);
+    }
+
+    // Expander logic
+    const toggleButton = document.getElementById('toggle-explore-version');
+    const exploreContent = document.getElementById('explore-version-content');
+
+    if(toggleButton && exploreContent) {
+        toggleButton.addEventListener('click', () => {
+            const isExpanded = exploreContent.classList.toggle('expanded');
+            toggleButton.textContent = isExpanded ? translations[currentLang].expanderButtonClose : translations[currentLang].expanderButtonOpen;
+            if(isExpanded) {
+                exploreContent.setAttribute('aria-hidden', 'false');
+                toggleButton.setAttribute('aria-expanded', 'true');
+            } else {
+                exploreContent.setAttribute('aria-hidden', 'true');
+                toggleButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // Set up language switcher listeners
+    document.getElementById('lang-switcher-en').addEventListener('click', (e) => { e.preventDefault(); setLanguage('en'); });
+    document.getElementById('lang-switcher-zh').addEventListener('click', (e) => { e.preventDefault(); setLanguage('zh'); });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeApp();
+    initLanguage();
+});
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "vite": "https://aistudiocdn.com/vite@^7.1.9"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="language-switcher-container">
+        <div class="language-switcher">
+            <a href="#" id="lang-switcher-zh" class="lang-option">中文</a>
+            <a href="#" id="lang-switcher-en" class="lang-option">EN</a>
+        </div>
+    </div>
+
+    <main class="content-wrapper" role="main">
+        <section class="hero-section" aria-labelledby="hero-heading">
+            <div class="hero-content">
+                <h1 id="hero-heading" data-lang-key="heroTitle"><br>让守护</br>看得见</h1>
+                <p data-lang-key="heroSubtitle">一份安心的礼物，送给最重要的家人。</p>
+                <a href="#vision-seniors-heading" class="hero-cta" data-lang-key="heroCTA">了解守望功能</a>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-device">
+                    <canvas id="canvas-hero" width="296" height="128" role="img" aria-roledescription="screenshot" aria-label="心流静岛设备屏幕渲染预览，显示家人留言：降温了 多穿衣服"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="section manifesto-section" role="region" aria-labelledby="manifesto-heading">
+            <h2 id="manifesto-heading" data-lang-key="manifestoTitle">我们的承诺：从动心到放心</h2>
+             <p data-lang-key="manifestoP1">对长辈而言，一个产品不仅要好用，更要可靠。我们不仅用温暖的设计打动人心，更用严谨的工程承诺守护安全。从“一分钟可用”的极简设置，到“误触不惊扰家人”的安心设计，每一个细节，都是我们对“放心”二字的郑重承诺。</p>
+            <div class="manifesto-creed">
+                <span data-lang-key="manifestoCreedHeader">我们相信：</span><br/>
+                <span data-lang-key="manifestoCreed1">科技的意义，不在于能做更多，而在于让人更安心。</span><br/>
+                <span data-lang-key="manifestoCreed2">每一次语音确认，是一次“被理解”的瞬间。</span><br/>
+                <span data-lang-key="manifestoCreed3">每一块屏幕亮起，是一次“有人在想我”的证明。</span>
+            </div>
+        </section>
+
+        <div class="section-break"></div>
+        
+        <section class="section" role="region" aria-labelledby="vision-seniors-heading">
+            <h2 id="vision-seniors-heading" data-lang-key="showcaseTitle">一个“数字家人”，守望每一刻</h2>
+            <p style="color: var(--ink-subtle);" data-lang-key="showcaseSubtitle">通过简化交互、聚焦核心需求，“心流静岛”希望能成为长者们可靠的伙伴，守望他们的健康、安全与亲情连接。</p>
+            <div id="showcase-container-seniors">
+                <!-- Showcase content for seniors will be dynamically generated by JavaScript -->
+            </div>
+        </section>
+        
+        <div class="section-break"></div>
+
+        <section class="section" role="region" aria-labelledby="comparison-heading">
+            <h2 id="comparison-heading" data-lang-key="comparisonTitle">为守望而生：敬老版与探索版对比</h2>
+            <p style="color: var(--ink-subtle);" data-lang-key="comparisonSubtitle">“心流静島”敬老版并非探索硬件的简单修改，而是从第一性原理出发，为守望长辈而进行的彻底再造。</p>
+            <table class="comparison-table" aria-label="敬老版与探索版功能对比">
+                <thead>
+                    <tr>
+                        <th data-lang-key="tableHeaderFeature">特性</th>
+                        <th data-lang-key="tableHeaderSenior">心流静岛・敬老版</th>
+                        <th data-lang-key="tableHeaderExplore">心流静岛・探索版 </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="特性" data-lang-key="featureCoreConcept">核心理念</td>
+                        <td data-col-title-1="敬老版:" data-lang-key="conceptSenior">生命守望 & 情感连接</td>
+                        <td data-col-title-2="探索版:" data-lang-key="conceptExplore">极客创造 & 开源定制</td>
+                    </tr>
+                    <tr>
+                        <td data-label="特性" data-lang-key="featureScreen">屏幕规格</td>
+                        <td data-col-title-1="敬老版:" data-lang-key="screenSenior">2.7英寸宽屏 (296x128)</td>
+                        <td data-col-title-2="探索版:" data-lang-key="screenExplore">1.54英寸方屏 (200x200)</td>
+                    </tr>
+                    <tr>
+                        <td data-label="特性" data-lang-key="featureInteraction">主要交互</td>
+                        <td data-col-title-1="敬老版:" data-lang-key="interactionSenior">语音优先 & 一键呼救</td>
+                        <td data-col-title-2="探索版:" data-lang-key="interactionExplore">四按键操作</td>
+                    </tr>
+                    <tr>
+                        <td data-label="特性" data-lang-key="featureSpecial">特色功能</td>
+                        <td data-col-title-1="敬老版:" data-lang-key="specialSenior">高亮侧边灯条、家人远程同步、智能夜灯</td>
+                        <td data-col-title-2="探索版:" data-lang-key="specialExplore">开源硬件、可编程、海量社区表盘</td>
+                    </tr>
+                    <tr>
+                        <td data-label="特性" data-lang-key="featureForm">产品形态</td>
+                        <td data-col-title-1="敬老版:" data-lang-key="formSenior">手机背夹/冰箱贴/敬老卡套</td>
+                        <td data-col-title-2="探索版:" data-lang-key="formExplore">腕上智能手表</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section architecture-section" role="region" aria-labelledby="philosophy-heading">
+            <h2 id="philosophy-heading" data-lang-key="philosophyTitle">我们的承诺：简单，安全，宁静</h2>
+            <p style="text-align: center; color: var(--ink-subtle); margin-bottom: 40px;" data-lang-key="philosophySubtitle">我们的核心任务，是将冰冷的科技，转化为温暖、可靠、值得信赖的信号。</p>
+            <div class="philosophy-flow">
+                <div class="flow-step">
+                    <div class="flow-icon">💬</div>
+                    <div class="step-title" data-lang-key="philosophyStep1Title">聆听与确认</div>
+                    <div class="step-desc" data-lang-key="philosophyStep1Desc">语音输入，安心回声</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">🛡️</div>
+                    <div class="step-title" data-lang-key="philosophyStep2Title">感知与守望</div>
+                    <div class="step-desc" data-lang-key="philosophyStep2Desc">智能夜灯，一键呼救</div>
+                </div>
+                 <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">⚫️</div>
+                    <div class="step-title" data-lang-key="philosophyStep3Title">宁静的呈现</div>
+                    <div class="step-desc" data-lang-key="philosophyStep3Desc">墨水屏常亮，从不错过</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="expander-section" role="region" aria-labelledby="explore-version-heading">
+            <h2 id="explore-version-heading" data-lang-key="expanderTitle">探索另一面：为高效能人士而生的探索版</h2>
+            <p style="color: var(--ink-subtle); max-width: 600px; margin: 0 auto;" data-lang-key="expanderSubtitle">“心流静岛”的故事始于一个为高效能人士打造的专注力工具。这里展示了它的技术前身与核心AI能力，以及项目完整的演进故事。</p>
+            <button id="toggle-explore-version" class="hero-cta" style="margin-top: 24px;" aria-expanded="false" aria-controls="explore-version-content" data-lang-key="expanderButtonOpen">了解探索版详情</button>
+        </section>
+        
+        <div id="explore-version-content" class="collapsible-content" aria-hidden="true">
+            <section class="section manifesto-section" role="region" aria-labelledby="explore-manifesto-heading">
+                <h2 id="explore-manifesto-heading" data-lang-key="exploreManifestoTitle">夺回你的专注力</h2>
+                <p data-lang-key="exploreManifestoP1">智能手机是为<strong>多功能、高互动、沉浸式体验</strong>而设计的，这恰恰是“便捷获取专注信息”的反面。想看一眼日程，需要经历解锁、清理通知、找到并打开App等一系列操作。在此过程中，注意力极易被其他信息流打断。</p>
+                <p data-lang-key="exploreManifestoP2">我们不想在手机的“注意力黑洞”里和成千上万个App争夺用户的眼球。我们选择创造一个专属的、宁静的、专注的信息角落——<strong>一个“信息静岛”</strong>。</p>
+            </section>
+    
+            <section class="section" role="region" aria-labelledby="explore-vision-heading">
+                <h2 id="explore-vision-heading" data-lang-key="exploreVisionTitle">核心愿景：开口即记事，要事自动浮现</h2>
+                <div id="showcase-container-explore">
+                    <!-- Exploration version showcase content will be dynamically generated by JavaScript -->
+                </div>
+            </section>
+            
+            <section class="section architecture-section" role="region" aria-labelledby="explore-philosophy-heading">
+                <h2 id="explore-philosophy-heading" data-lang-key="explorePhilosophyTitle">设计哲学：从噪音到信号</h2>
+                <p style="text-align: center; color: var(--ink-subtle); margin-bottom: 20px;" data-lang-key="explorePhilosophySubtitle">我们的核心任务，是为您过滤整个世界的“噪音”，只呈现最重要的“信号”。</p>
+                <div class="philosophy-flow" style="align-items: stretch; gap: 8px;">
+                    <div class="flow-step" style="background-color: var(--bg-main); padding: 16px 24px; border: 1px solid var(--stone-subtle); border-radius: var(--border-radius); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <div class="step-title" data-lang-key="explorePhilosophyStep1Title">1. 无摩擦记录</div>
+                        <div class="step-desc" style="font-size: 13px;" data-lang-key="explorePhilosophyStep1Desc">随时随地的语音输入</div>
+                    </div>
+                    <div class="flow-arrow" style="margin-top: 0; align-self: center;">→</div>
+                     <div class="flow-step" style="background-color: var(--bg-main); padding: 16px 24px; border: 1px solid var(--stone-subtle); border-radius: var(--border-radius); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <div class="step-title" data-lang-key="explorePhilosophyStep2Title">2. 智能优先级排序</div>
+                        <div class="step-desc" style="font-size: 13px;" data-lang-key="explorePhilosophyStep2Desc">AI判定事件的轻重缓急</div>
+                    </div>
+                     <div class="flow-arrow" style="margin-top: 0; align-self: center;">→</div>
+                     <div class="flow-step" style="background-color: var(--bg-main); padding: 16px 24px; border: 1px solid var(--stone-subtle); border-radius: var(--border-radius); flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <div class="step-title" data-lang-key="explorePhilosophyStep3Title">3. 专注锚点</div>
+                        <div class="step-desc" style="font-size: 13px;" data-lang-key="explorePhilosophyStep3Desc">墨水屏呈现最重要的事</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="cta-section" role="contentinfo">
+            <h2 data-lang-key="footerTitle">我们不造设备，我们造的是陪伴。</h2>
+            <p data-lang-key="footerSubtitle">欢迎登岛。</p>
+        </footer>
+    </main>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

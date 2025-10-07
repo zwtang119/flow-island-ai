@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sticky Note - Legacy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #000000;
+            --text-color: #FFFFFF;
+            --border-color: #FFFFFF;
+            --disabled-color: #555555;
+            --e-ink-bg: #E0E0E0;
+            --e-ink-text: #000000;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            width: 100%;
+            height: 100%;
+            max-width: 600px;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .console {
+            border: 2px solid var(--border-color);
+            padding: 30px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        h1 {
+            font-size: 2.5em; /* Larger title */
+            margin: 0 0 20px 0;
+            image-rendering: pixelated;
+        }
+        
+        .record-button, .settings-button {
+            background-color: transparent;
+            color: var(--text-color);
+            border: none;
+            padding: 15px 20px;
+            font-family: inherit;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .record-button:hover:not(:disabled), .settings-button:hover:not(:disabled) {
+            background-color: var(--text-color);
+            color: var(--background-color);
+        }
+
+        .record-button:disabled, .settings-button:disabled {
+            color: var(--disabled-color);
+            cursor: not-allowed;
+        }
+        
+        #statusText {
+            margin-top: 15px;
+            font-size: 0.9em;
+            min-height: 1.2em; /* Prevents layout shift */
+            line-height: 1.4;
+        }
+
+        #watchyCanvas {
+            background-color: var(--background-color);
+            /* A subtle border to contain the watch bezel */
+            border: 1px solid var(--background-color);
+        }
+
+        .calendar-settings {
+            margin: 20px 0;
+            width: 100%;
+            font-size: 0.8em;
+            text-align: left;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .calendar-settings h2 {
+            font-size: 1.2em;
+            margin: 0 0 10px 0;
+        }
+        
+        .calendar-settings input[type="url"] {
+            width: 100%;
+            background: #222;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.8em;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .settings-button {
+            font-size: 1em;
+            padding: 10px 15px;
+            width: 100%;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: var(--text-color);
+            text-align: center;
+            width: 100%;
+        }
+        
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .console { padding: 20px; }
+            h1 { font-size: 1.8em; }
+            .record-button { font-size: 1em; }
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="console">
+            <div>
+                <h1>AI STICKY NOTE</h1>
+
+                <div class="calendar-settings">
+                    <h2>CALENDAR SYNC</h2>
+                    <input type="url" id="calendarUrlInput" placeholder="Paste .ics calendar URL here...">
+                    <button class="settings-button" id="saveCalendarUrl">&gt; SAVE &lt;</button>
+                </div>
+
+                <button class="record-button" id="recordButton">
+                    <span id="buttonText">&gt; START RECORDING &lt;</span>
+                </button>
+                <p id="statusText"></p>
+            </div>
+            
+            <canvas id="watchyCanvas" width="200" height="200"></canvas>
+            
+            <footer>(c) Flow Island Project</footer>
+        </div>
+    </div>
+
+    <script src="/env.js"></script>
+    <script type="module">
+        import { GoogleGenAI } from "@google/genai";
+
+        const recordButton = document.getElementById('recordButton');
+        const buttonText = document.getElementById('buttonText');
+        const previewCanvas = document.getElementById('watchyCanvas');
+        const previewCtx = previewCanvas.getContext('2d');
+        const statusText = document.getElementById('statusText');
+        const saveCalendarUrlButton = document.getElementById('saveCalendarUrl');
+        const calendarUrlInput = document.getElementById('calendarUrlInput');
+        
+        let ai;
+        let isRecording = false;
+        let recognition;
+        let finalTranscript = '';
+        let currentMemo = '';
+
+        const LAYOUT = {
+            W: 200, H: 200, PADDING: 10,
+            TIME_Y: 12, DATE_Y: 48, MEMO_Y: 66,
+            TIME_FONT: `28px "Press Start 2P", cursive`,
+            DATE_FONT: `10px "Press Start 2P", cursive`,
+            MEMO_FONT: `12px "SimSun", "NSimSun", "Heiti SC", "PingFang SC", "Microsoft YaHei", sans-serif`,
+            MEMO_LINE_HEIGHT: 18,
+            PROMPT_FONT: `12px "Press Start 2P", cursive`,
+        };
+
+        previewCanvas.width = LAYOUT.W;
+        previewCanvas.height = LAYOUT.H;
+        
+        // --- Centralized Timeout Helper ---
+        function withTimeout(promise, ms, errorMessage = 'Operation timed out.') {
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error(errorMessage)), ms);
+            });
+            return Promise.race([promise, timeoutPromise]);
+        }
+
+        function updateButtonState(text, disabled = false) {
+            buttonText.textContent = `> ${text} <`;
+            recordButton.disabled = disabled;
+        }
+
+        function updateStatus(message = '') {
+            statusText.textContent = message;
+        }
+        
+        if (!process.env.API_KEY) {
+            updateStatus('> ERROR: API_KEY is not set.');
+            updateButtonState('AI OFFLINE', true);
+        } else {
+            ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        }
+        
+        function drawWatchyPreview(memoText = "") {
+            previewCtx.fillStyle = '#E0E0E0';
+            previewCtx.fillRect(0, 0, LAYOUT.W, LAYOUT.H);
+            
+            previewCtx.fillStyle = '#000000';
+            previewCtx.textAlign = 'center';
+            
+            const now = new Date();
+            const hour = String(now.getHours()).padStart(2, '0');
+            const minute = String(now.getMinutes()).padStart(2, '0');
+            const timeStr = `${hour}:${minute}`;
+
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+            const dayStr = days[now.getDay()];
+            const dateNumStr = String(now.getDate()).padStart(2, '0');
+            const monthStr = months[now.getMonth()];
+            const dateStr = `${dayStr} ${dateNumStr} ${monthStr}`;
+
+            previewCtx.font = LAYOUT.TIME_FONT;
+            previewCtx.textBaseline = 'top';
+            previewCtx.fillText(timeStr, LAYOUT.W / 2, LAYOUT.TIME_Y);
+
+            previewCtx.font = LAYOUT.DATE_FONT;
+            previewCtx.fillText(dateStr, LAYOUT.W / 2, LAYOUT.DATE_Y);
+
+            previewCtx.font = LAYOUT.MEMO_FONT;
+            previewCtx.textAlign = 'left';
+            previewCtx.textBaseline = 'top';
+
+            if (memoText) {
+                const textLines = memoText.split('\n');
+                let processedLines = [];
+                const maxLineWidth = LAYOUT.W - LAYOUT.PADDING * 2;
+
+                textLines.forEach(line => {
+                    let currentLine = '';
+                    for (let i = 0; i < line.length; i++) {
+                        const testLine = currentLine + line[i];
+                        if (previewCtx.measureText(testLine).width > maxLineWidth) {
+                            processedLines.push(currentLine);
+                            currentLine = line[i];
+                        } else {
+                            currentLine = testLine;
+                        }
+                    }
+                    processedLines.push(currentLine);
+                });
+                
+                let y = LAYOUT.MEMO_Y + LAYOUT.PADDING;
+                for (let i = 0; i < processedLines.length; i++) {
+                    if (y + LAYOUT.MEMO_LINE_HEIGHT > LAYOUT.H) break; 
+                    previewCtx.fillText(processedLines[i], LAYOUT.PADDING, y);
+                    y += LAYOUT.MEMO_LINE_HEIGHT;
+                }
+            } else {
+                 previewCtx.font = LAYOUT.PROMPT_FONT;
+                 previewCtx.fillText('C:\\>_', LAYOUT.PADDING, LAYOUT.MEMO_Y + LAYOUT.PADDING);
+            }
+        }
+
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'zh-CN';
+
+            recognition.onstart = () => {
+                isRecording = true;
+                updateStatus('');
+                updateButtonState('STOP RECORDING');
+                finalTranscript = '';
+            };
+
+            recognition.onresult = (event) => {
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    }
+                }
+            };
+
+            recognition.onerror = (event) => {
+                updateStatus(`> ERROR: ${event.error}`);
+                isRecording = false;
+            };
+
+            recognition.onend = () => {
+                if (isRecording) {
+                    isRecording = false;
+                    if (finalTranscript && finalTranscript.trim()) {
+                        processTranscript(finalTranscript);
+                    } else {
+                        updateButtonState('START RECORDING');
+                    }
+                }
+            };
+        } else {
+            updateButtonState('NOT SUPPORTED', true);
+            updateStatus('> ERROR: Browser does not support Web Speech API.');
+        }
+
+        recordButton.addEventListener('click', () => {
+            if (!recognition || !ai) return;
+
+            if (!isRecording) {
+                recognition.start();
+            } else {
+                recognition.stop();
+            }
+        });
+
+        saveCalendarUrlButton.addEventListener('click', async () => {
+            const url = calendarUrlInput.value.trim();
+            if (!url) {
+                updateStatus('> ERROR: Calendar URL cannot be empty.');
+                return;
+            }
+            try {
+                updateStatus('> Saving URL...');
+                saveCalendarUrlButton.disabled = true;
+                const response = await fetch('/api/calendar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Failed to save URL.');
+                
+                updateStatus('> Calendar URL saved successfully.');
+            } catch (error) {
+                updateStatus(`> ERROR: ${error.message}`);
+            } finally {
+                saveCalendarUrlButton.disabled = false;
+            }
+        });
+
+
+        async function processTranscript(text) {
+            updateButtonState('PROCESSING...', true);
+            updateStatus('> Summarizing with AI...');
+
+            try {
+                const aiPromise = ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: `请使用中文将以下语音内容转换为一个为微小手表屏幕优化的超简洁便利贴。最终内容严格限制在6行以内。如果有多项独立的任务，请用数字列表（例如：“1. 任务A”）进行罗列，并且每个独立的任务点都应强制换行。如果是单个任务，请直接总结。单任务示例：“提醒我明天下午3点和张博士有个重要会议，我需要带上季度报告文件”应总结为“3点: 张博士, 带报告”。多任务示例：“提醒我下班后买牛奶，并且晚上八点给妈妈打电话”应总结为“1. 买牛奶\\n2. 8点: 致电妈妈”。语音内容：“${text}”`,
+                    config: { thinkingConfig: { thinkingBudget: 0 } }
+                });
+                const response = await withTimeout(aiPromise, 10000, 'AI request timed out.');
+                
+                let summary = response.text.trim().replace(/[*#]/g, '');
+                if (!summary) {
+                    throw new Error('AI returned an empty summary.');
+                }
+                
+                currentMemo = summary;
+                drawWatchyPreview(currentMemo);
+
+                try {
+                    updateStatus('> Syncing with server...');
+                    const imageBlob = await new Promise(resolve => previewCanvas.toBlob(resolve, 'image/png'));
+                    await sendImageToWatchyServer(imageBlob);
+                    updateStatus('> Memo synced to server.');
+                } catch (serverError) {
+                    let friendlyMessage = serverError.message;
+                    if (friendlyMessage.includes('Server connection timed out')) {
+                        friendlyMessage += ' Check server/firewall. See GUIDE.md.';
+                    }
+                    updateStatus(`> ERROR: ${friendlyMessage}`);
+                }
+
+            } catch (aiError) {
+                currentMemo = '';
+                drawWatchyPreview(currentMemo);
+                updateStatus(`> ERROR: ${aiError.message}`);
+            } finally {
+                updateButtonState('START RECORDING');
+            }
+        }
+
+        async function sendImageToWatchyServer(imageBlob) {
+            const fetchPromise = fetch('/api/image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'image/png' },
+                body: imageBlob
+            });
+            
+            const response = await withTimeout(fetchPromise, 8000, 'Server connection timed out.');
+
+            if (!response.ok) {
+                throw new Error(`Server connection failed (status: ${response.status})`);
+            }
+
+            const data = await response.json();
+            if (!data.success) {
+               throw new Error(data.message || 'Server reported an error');
+            }
+        }
+
+        function updatePreviewClock() {
+            drawWatchyPreview(currentMemo);
+        }
+        
+        document.fonts.ready.then(() => {
+            updatePreviewClock();
+            setInterval(updatePreviewClock, 60000);
+        });
+
+    </script>
+</body>
+</html>

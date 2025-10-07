@@ -1,0 +1,825 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心流静岛 (Flow Island) - 配置中心</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Condensed:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #FFFFFF;
+            --bg-subtle: #F7F7FF;
+            --text-main: #000000;
+            --text-subtle: #555555;
+            --border-main: #DDDDDD;
+            --button-primary-bg: #000000;
+            --button-primary-text: #FFFFFF;
+            --q1-color: #D32F2F;
+            --q2-color: #388E3C;
+            --q3-color: #FBC02D;
+            --q4-color: #7B1FA2;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-subtle);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        .root-container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid var(--border-main);
+            margin-bottom: 30px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-subtle);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        
+        .tab-button.active {
+            color: var(--text-main);
+            border-bottom-color: var(--text-main);
+        }
+        
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .main-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .main-container {
+                grid-template-columns: 300px 1fr;
+                gap: 40px;
+            }
+        }
+
+        .preview-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .device-preview {
+            position: sticky;
+            top: 30px;
+            width: 250px;
+            height: 250px;
+            background: #EFEFEF;
+            border: 1px solid var(--border-main);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+        
+        .device-preview canvas {
+            width: 200px;
+            height: 200px;
+            background-color: var(--bg-main);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .config-column, .showcase-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .card {
+            background: var(--bg-main);
+            border: 1px solid var(--border-main);
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .clear-button {
+            background: none;
+            border: none;
+            color: var(--text-subtle);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .clear-button:hover {
+            color: var(--q1-color);
+        }
+
+        .action-button {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: var(--button-primary-bg);
+            color: var(--button-primary-text);
+            border: 1px solid var(--button-primary-bg);
+            border-radius: 6px;
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, background-color 0.2s;
+            user-select: none; /* Prevent text selection on hold */
+        }
+        
+        .action-button.recording {
+             background-color: var(--q1-color);
+             border-color: var(--q1-color);
+        }
+
+        .action-button:hover:not(:disabled) {
+            opacity: 0.8;
+        }
+
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-text {
+            margin-top: 15px;
+            font-size: 13px;
+            min-height: 1.2em;
+            line-height: 1.4;
+            color: var(--text-subtle);
+        }
+        
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 600px) {
+            .agenda-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .quadrant-box {
+            padding-top: 15px;
+        }
+
+        .quadrant-box h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid;
+        }
+
+        #quadrant-1 h3, .quadrant-1 h3 { border-color: var(--q1-color); }
+        #quadrant-2 h3, .quadrant-2 h3 { border-color: var(--q2-color); }
+        #quadrant-3 h3, .quadrant-3 h3 { border-color: var(--q3-color); }
+        #quadrant-4 h3, .quadrant-4 h3 { border-color: var(--q4-color); }
+        
+        .agenda-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .agenda-item {
+            padding: 6px 0;
+            font-family: 'Roboto Condensed', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .agenda-item-text {
+             flex-grow: 1;
+             margin-right: 8px;
+        }
+        
+        .agenda-item .time {
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        
+        .agenda-item .date-label {
+            color: var(--text-subtle);
+            font-size: 12px;
+            margin-right: 6px;
+        }
+
+        .delete-button {
+            cursor: pointer;
+            color: var(--text-subtle);
+            font-weight: bold;
+            padding: 0 5px;
+            opacity: 0.5;
+        }
+        .delete-button:hover {
+            color: var(--q1-color);
+            opacity: 1;
+        }
+
+        .persona-card {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 500px) {
+            .persona-card {
+                grid-template-columns: 200px 1fr;
+                align-items: center;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="root-container">
+        <nav class="tab-nav">
+            <button class="tab-button active" data-tab="user-panel">配置中心</button>
+            <button class="tab-button" data-tab="showcase-panel">功能演示</button>
+        </nav>
+
+        <div id="user-panel" class="tab-panel active">
+            <div class="main-container">
+                <div class="preview-column">
+                    <div class="device-preview">
+                        <canvas id="livePreviewCanvas" width="200" height="200"></canvas>
+                    </div>
+                </div>
+                <div class="config-column">
+                    <div class="card">
+                        <h2>语音添加日程</h2>
+                        <button class="action-button" id="recordButton">点击开始录音</button>
+                        <p id="statusText" class="status-text">说出您的日程安排，例如：“明天上午10点和客户开会，下午3点去健身”</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                           <h2>我的日程 (AI 自动分类)</h2>
+                           <button id="clearAgendaButton" class="clear-button">[清空日程]</button>
+                        </div>
+                        <div class="agenda-grid" id="agenda-grid-container">
+                            <div id="quadrant-1" class="quadrant-box">
+                                <h3>🔴 重要且紧急</h3>
+                                <ul class="agenda-list" data-quadrant="1"></ul>
+                            </div>
+                            <div id="quadrant-2" class="quadrant-box">
+                                <h3>🟢 重要不紧急</h3>
+                                <ul class="agenda-list" data-quadrant="2"></ul>
+                            </div>
+                            <div id="quadrant-3" class="quadrant-box">
+                                <h3>🟡 紧急不重要</h3>
+                                <ul class="agenda-list" data-quadrant="3"></ul>
+                            </div>
+                            <div id="quadrant-4" class="quadrant-box">
+                                <h3>🟣 不重要不紧急</h3>
+                                <ul class="agenda-list" data-quadrant="4"></ul>
+                            </div>
+                        </div>
+                        <p id="agendaStatus" class="status-text">暂无日程。请通过语音添加。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="showcase-panel" class="tab-panel">
+            <div class="showcase-column" id="showcase-container">
+                <!-- Showcase content will be dynamically generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/env.js"></script>
+    <script type="module">
+        import { GoogleGenAI, Type } from "@google/genai";
+        
+        const personaData = {
+            li_xiangyu: {
+                name: "李翔宇 - AI高级工程师",
+                tasks: [
+                    {"uid":"persona-v2-q1-001","time":"09:30","summary":"向David汇报NLUI调度系统延迟问题","quadrant":1, "start": "2024-10-26T09:30:00Z"},
+                    {"uid":"persona-v2-q1-002","time":"14:00","summary":"处理线上服务P0故障 (LLM-高德地图API)","quadrant":1, "start": "2024-10-26T14:00:00Z"},
+                    {"uid":"persona-v2-q2-001","time":"待办","summary":"AI主板V3核心芯片选型","quadrant":2, "start": "2024-10-27T09:00:00Z"},
+                ].sort((a, b) => new Date(a.start) - new Date(b.start))
+            },
+            tang_zhiwei: {
+                name: "唐志伟 - AI博士研究生",
+                tasks: [
+                    {"uid":"persona-phd-q1-001","time":"23:59","summary":"NeurIPS 2025论文最终版提交截止","quadrant":1, "start": "2024-11-05T23:59:00Z"},
+                    {"uid":"persona-phd-q1-002","time":"10:00","summary":"与张辉教授紧急讨论实验数据问题","quadrant":1, "start": "2024-10-26T10:00:00Z"},
+                    {"uid":"persona-phd-q2-001","time":"19:00","summary":"准备周四Agent课题组的组会报告","quadrant":2, "start": "2024-10-29T19:00:00Z"},
+                ].sort((a, b) => new Date(a.start) - new Date(b.start))
+            },
+            chen_yalin: {
+                name: "陈雅琳 - 市场运营负责人",
+                tasks: [
+                     {"uid":"persona-mkt-q1-001","time":"10:00","summary":"与CEO紧急复盘小红书预热笔记数据","quadrant":1, "start": "2024-11-12T10:00:00Z"},
+                     {"uid":"persona-mkt-q2-001","time":"待办","summary":"规划Q1市场宣发策略","quadrant":2, "start": "2024-11-13T09:30:00Z"},
+                     {"uid":"persona-mkt-q2-002","time":"14:00","summary":"与核心KOL渠道伙伴敲定年度合作","quadrant":2, "start": "2024-11-12T14:00:00Z"},
+                ].sort((a, b) => new Date(a.start) - new Date(b.start))
+            }
+        };
+
+        const LAYOUT = {
+            W: 200, H: 200, PADDING: 12,
+            TODO_BAR:   { Y: 0,   H: 50, FONT: "400 14px 'Inter', sans-serif", LINE_HEIGHT: 18, MAX_LINES: 2 },
+            FOCUS_ZONE: { Y: 51,  H: 98,
+                TIME:    { Y: 59, FONT: "700 24px 'Inter', sans-serif" },
+                SUMMARY: { Y: 88, FONT: "600 22px 'Inter', sans-serif", LINE_HEIGHT: 26, MAX_LINES: 2 }
+            },
+            CONTEXT_ZONE: { Y: 150, H: 50, FONT: "400 14px 'Inter', sans-serif", LINE_HEIGHT: 18, MAX_LINES: 2 },
+            EMPTY_STATE: { Y: 100, FONT: "600 18px 'Inter', sans-serif" }
+        };
+
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                tabPanels.forEach(panel => {
+                    panel.classList.toggle('active', panel.id === button.dataset.tab);
+                });
+            });
+        });
+
+        const recordButton = document.getElementById('recordButton');
+        const statusText = document.getElementById('statusText');
+        const livePreviewCanvas = document.getElementById('livePreviewCanvas');
+        const agendaStatus = document.getElementById('agendaStatus');
+        const clearAgendaButton = document.getElementById('clearAgendaButton');
+        const agendaGridContainer = document.getElementById('agenda-grid-container');
+        const showcaseContainer = document.getElementById('showcase-container');
+        const quadrantLists = {
+            1: document.querySelector('.agenda-list[data-quadrant="1"]'),
+            2: document.querySelector('.agenda-list[data-quadrant="2"]'),
+            3: document.querySelector('.agenda-list[data-quadrant="3"]'),
+            4: document.querySelector('.agenda-list[data-quadrant="4"]'),
+        };
+        
+        let ai;
+        let recognition;
+        let finalTranscript = '';
+        let taskWarehouse = [];
+        let isRecording = false;
+        let recordingTimeoutId = null;
+        const TASKS_STORAGE_KEY = 'flowIslandTasks';
+        
+        function withTimeout(promise, ms, errorMessage = '操作超时。') {
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error(errorMessage)), ms);
+            });
+            return Promise.race([promise, timeoutPromise]);
+        }
+        
+        function updateButtonState(text, disabled = false, recording = false) {
+            recordButton.textContent = text;
+            recordButton.disabled = disabled;
+            recordButton.classList.toggle('recording', recording);
+        }
+
+        function updateStatus(message = '', isError = false) {
+            statusText.textContent = message;
+            statusText.style.color = isError ? 'var(--q1-color)' : 'var(--text-subtle)';
+        }
+
+        function loadTasksFromStorage() {
+            try {
+                const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+                return storedTasks ? JSON.parse(storedTasks) : [];
+            } catch (e) { console.error("Failed to load tasks", e); return []; }
+        }
+
+        function saveTasksToStorage(tasks) {
+            try {
+                localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+            } catch (e) { console.error("Failed to save tasks", e); }
+        }
+        
+        function getRelativeDateLabel(dateString) {
+            if (!dateString) return '';
+            const now = new Date();
+            const eventDate = new Date(dateString);
+
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const eventDay = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+
+            const diffTime = eventDay - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) return '(今天)';
+            if (diffDays === 1) return '(明天)';
+            if (diffDays > 1) return `(${(eventDate.getMonth() + 1)}月${eventDate.getDate()}日)`;
+            return ''; // Don't show labels for past events in this context
+        }
+
+        function renderMyAgenda(tasks) {
+            Object.values(quadrantLists).forEach(list => list.innerHTML = '');
+            if (!tasks || tasks.length === 0) {
+                agendaStatus.textContent = '暂无日程。请通过语音添加。';
+                return;
+            }
+            agendaStatus.textContent = `当前仓库共 ${tasks.length} 条日程。`;
+            
+            const sortedTasks = [...tasks].sort((a,b) => new Date(a.start) - new Date(b.start));
+
+            sortedTasks.forEach(task => {
+                if (quadrantLists[task.quadrant]) {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'agenda-item';
+                    
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'agenda-item-text';
+                    
+                    const dateLabel = (task.time !== '待办') ? getRelativeDateLabel(task.start) : '';
+                    
+                    textSpan.innerHTML = `<span class="time">${task.time}</span> <span class="date-label">${dateLabel}</span> ${task.summary}`;
+
+                    const deleteSpan = document.createElement('span');
+                    deleteSpan.className = 'delete-button';
+                    deleteSpan.textContent = '×';
+                    deleteSpan.title = '删除此日程';
+                    deleteSpan.dataset.taskId = task.id;
+
+                    listItem.appendChild(textSpan);
+                    listItem.appendChild(deleteSpan);
+                    quadrantLists[task.quadrant].appendChild(listItem);
+                }
+            });
+        }
+        
+        function selectEventsForDisplay(tasks) {
+            if (!tasks || tasks.length === 0) {
+                return { focus: null, context: null, todo: null };
+            }
+            const now = new Date();
+            const futureEvents = tasks.filter(e => new Date(e.start) > now || e.time === "待办");
+            
+            const importantTimedEvents = futureEvents
+                .filter(e => e.time !== "待办" && (e.quadrant === 1 || e.quadrant === 2))
+                .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+            const importantTodoEvents = futureEvents
+                .filter(e => e.time === "待办" && (e.quadrant === 1 || e.quadrant === 2))
+                .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+            const focusEvent = importantTimedEvents[0] || null;
+            const contextEvent = importantTimedEvents[1] || null;
+            const todoEvent = importantTodoEvents[0] || null;
+            
+            return { focus: focusEvent, context: contextEvent, todo: todoEvent };
+        }
+
+        function _getWrappedLines(ctx, text, maxWidth) {
+            const lines = [];
+            if (!text) return lines;
+            let currentLine = '';
+            for (const char of text) {
+                const testLine = currentLine + char;
+                if (ctx.measureText(testLine).width > maxWidth && currentLine !== '') {
+                    lines.push(currentLine);
+                    currentLine = char;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        }
+        
+        async function renderImageOnCanvas(canvas, tasks) {
+            const { focus, context, todo } = selectEventsForDisplay(tasks);
+            const ctx = canvas.getContext('2d');
+
+            await document.fonts.ready;
+            ctx.imageSmoothingEnabled = false;
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, LAYOUT.W, LAYOUT.H);
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+
+            if (todo) {
+                ctx.font = LAYOUT.TODO_BAR.FONT;
+                const text = `待办: ${todo.summary}`;
+                const lines = _getWrappedLines(ctx, text, LAYOUT.W - LAYOUT.PADDING * 2).slice(0, LAYOUT.TODO_BAR.MAX_LINES);
+                const totalTextHeight = lines.length * LAYOUT.TODO_BAR.LINE_HEIGHT;
+                const startY = LAYOUT.TODO_BAR.Y + (LAYOUT.TODO_BAR.H - totalTextHeight) / 2;
+                for (let i = 0; i < lines.length; i++) {
+                    ctx.fillText(lines[i], LAYOUT.PADDING, startY + (i * LAYOUT.TODO_BAR.LINE_HEIGHT));
+                }
+            }
+
+            if (focus) {
+                ctx.font = LAYOUT.FOCUS_ZONE.TIME.FONT;
+                ctx.fillText(focus.time, LAYOUT.PADDING, LAYOUT.FOCUS_ZONE.TIME.Y);
+
+                ctx.font = LAYOUT.FOCUS_ZONE.SUMMARY.FONT;
+                const lines = _getWrappedLines(ctx, focus.summary, LAYOUT.W - LAYOUT.PADDING * 2).slice(0, LAYOUT.FOCUS_ZONE.SUMMARY.MAX_LINES);
+                for (let i = 0; i < lines.length; i++) {
+                    ctx.fillText(lines[i], LAYOUT.PADDING, LAYOUT.FOCUS_ZONE.SUMMARY.Y + (i * LAYOUT.FOCUS_ZONE.SUMMARY.LINE_HEIGHT));
+                }
+            } else {
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = LAYOUT.EMPTY_STATE.FONT;
+                ctx.fillText("享受您的心流时间", LAYOUT.W / 2, LAYOUT.EMPTY_STATE.Y);
+            }
+
+            if (context) {
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.font = LAYOUT.CONTEXT_ZONE.FONT;
+                const text = `稍后: ${context.time} ${context.summary}`;
+                const lines = _getWrappedLines(ctx, text, LAYOUT.W - LAYOUT.PADDING * 2).slice(0, LAYOUT.CONTEXT_ZONE.MAX_LINES);
+                const totalTextHeight = lines.length * LAYOUT.CONTEXT_ZONE.LINE_HEIGHT;
+                const startY = LAYOUT.CONTEXT_ZONE.Y + (LAYOUT.CONTEXT_ZONE.H - totalTextHeight) / 2;
+                for (let i = 0; i < lines.length; i++) {
+                     ctx.fillText(lines[i], LAYOUT.PADDING, startY + (i * LAYOUT.CONTEXT_ZONE.LINE_HEIGHT));
+                }
+            }
+
+            return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        }
+
+        async function updateUIAndSync(tasks) {
+            renderMyAgenda(tasks);
+            
+            updateStatus('正在生成手表预览...');
+            try {
+                const imageBlob = await renderImageOnCanvas(livePreviewCanvas, tasks);
+                updateStatus('正在同步到服务器...');
+                await sendImageToServer(imageBlob);
+                updateStatus('日程已更新。');
+            } catch (err) {
+                updateStatus(`错误: ${err.message}`, true);
+            }
+        }
+
+        async function processTranscript(text) {
+            updateStatus('正在用 AI 分析您的日程...');
+            try {
+                const aiPromise = ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: `请为我分析并分类以下语音内容：“${text}”`,
+                    config: {
+                        systemInstruction: `你是一个名为 "心流静岛" 的AI效能教练。你的任务是分析用户的语音输入，将其拆分为多个独立的日历事件，并进行“时间管理四象限”分类。你必须严格遵守以下规则：
+1. **输出格式**: 必须返回一个JSON数组。每个对象必须包含 \`time\` (HH:MM格式或'待办'), \`summary\` (8个字以上，但不超过16个汉字的极简摘要，**不含时间**), \`quadrant\` (数字1-4), 和 \`start\` (ISO 8601格式)。绝对禁止返回任何解释或Markdown。
+2. **时间强制**: \`time\`字段必须存在。若语音无明确时间，固定返回字符串 "待办"。
+3. **摘要极简**: \`summary\`必须是“动词+对象”的核心信息，删除所有修饰语。
+4. **时间解析**: 根据当前时间（假设为 ${new Date().toISOString()}）推断最合理的未来具体时间。对于“待办”事项，将\`start\`设置为当天的开始。
+5. **多任务拆分**: 将语音中的多个日程拆分成独立的JSON对象。`,
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: Type.ARRAY,
+                            items: {
+                                type: Type.OBJECT,
+                                properties: {
+                                    time: { type: Type.STRING },
+                                    summary: { type: Type.STRING },
+                                    quadrant: { type: Type.INTEGER },
+                                    start: { type: Type.STRING }
+                                },
+                                required: ['time', 'summary', 'quadrant', 'start']
+                            }
+                        }
+                    }
+                });
+                const response = await withTimeout(aiPromise, 60000, 'AI 请求超时。');
+                const newTasks = JSON.parse(response.text.trim());
+                if (!newTasks || newTasks.length === 0) { throw new Error('AI 未能识别有效日程。'); }
+                
+                const existingTasks = loadTasksFromStorage();
+                const tasksWithIds = newTasks.map(task => ({ ...task, id: `task-${Date.now()}-${Math.random()}` }));
+                
+                const combinedTasks = [...existingTasks];
+                tasksWithIds.forEach(newTask => {
+                    if (!combinedTasks.some(existing => existing.summary === newTask.summary && existing.start === newTask.start)) {
+                        combinedTasks.push(newTask);
+                    }
+                });
+
+                taskWarehouse = combinedTasks;
+                saveTasksToStorage(taskWarehouse);
+                await updateUIAndSync(taskWarehouse);
+
+            } catch (err) {
+                updateStatus(`错误: ${err.message}`, true);
+            } finally {
+                updateButtonState('点击开始录音');
+            }
+        }
+
+        async function sendImageToServer(imageBlob) {
+            const fetchPromise = fetch('/api/image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'image/png' },
+                body: imageBlob
+            });
+            const response = await withTimeout(fetchPromise, 8000, '服务器连接超时。');
+            if (!response.ok) { throw new Error(`服务器连接失败 (状态: ${response.status})`); }
+        }
+
+        function handleRecordClick() {
+            if (!recognition || !ai) return;
+
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch(e) {
+                    console.error("Could not start recognition:", e);
+                    updateStatus(`语音识别启动失败: ${e.message}`, true);
+                }
+            }
+        }
+
+        function initialize() {
+            if (!process.env.API_KEY) {
+                updateStatus('错误: API_KEY 未设置。', true);
+                updateButtonState('AI OFFLINE', true);
+                return;
+            }
+            ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = true; // <-- CORE CHANGE: Enable continuous listening
+                recognition.interimResults = false;
+                recognition.lang = 'zh-CN';
+                
+                recognition.onstart = () => {
+                    isRecording = true;
+                    finalTranscript = '';
+                    updateStatus('正在聆听...');
+                    updateButtonState('正在聆听... (点击停止)', false, true);
+                    recordingTimeoutId = setTimeout(() => {
+                        if (isRecording) {
+                            recognition.stop();
+                        }
+                    }, 60000); // 60-second timeout
+                };
+                
+                // CORE CHANGE: Accumulate results instead of taking just the first one.
+                recognition.onresult = (event) => {
+                    let interim_transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript;
+                        } else {
+                            interim_transcript += event.results[i][0].transcript;
+                        }
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    isRecording = false;
+                    if (recordingTimeoutId) clearTimeout(recordingTimeoutId);
+                    // 'no-speech' is a common error when continuous is true, we can ignore it.
+                    if (event.error !== 'no-speech') {
+                         updateStatus(`语音识别错误: ${event.error}`, true);
+                    }
+                    updateButtonState('点击开始录音');
+                };
+
+                recognition.onend = () => {
+                    isRecording = false;
+                    if (recordingTimeoutId) clearTimeout(recordingTimeoutId);
+                    
+                    if (recordButton.disabled) return;
+                    
+                    updateButtonState('正在处理...', true);
+                    if (finalTranscript && finalTranscript.trim()) {
+                        processTranscript(finalTranscript);
+                    } else {
+                        updateStatus('未检测到有效语音。');
+                        updateButtonState('点击开始录音');
+                    }
+                };
+                
+                recordButton.addEventListener('click', handleRecordClick);
+
+            } else {
+                updateButtonState('浏览器不支持', true);
+                updateStatus('错误: 浏览器不支持网页语音 API。', true);
+                addMicrophonePermission();
+            }
+
+            clearAgendaButton.addEventListener('click', () => {
+                if (confirm('您确定要清空所有日程吗？此操作不可撤销。')) {
+                    taskWarehouse = [];
+                    saveTasksToStorage([]);
+                    updateUIAndSync([]);
+                    updateStatus('所有日程已清空。');
+                }
+            });
+
+            agendaGridContainer.addEventListener('click', (event) => {
+                if (event.target.classList.contains('delete-button')) {
+                    const taskIdToDelete = event.target.dataset.taskId;
+                    taskWarehouse = taskWarehouse.filter(task => task.id !== taskIdToDelete);
+                    saveTasksToStorage(taskWarehouse);
+                    updateUIAndSync(taskWarehouse);
+                    updateStatus('一条日程已删除。');
+                }
+            });
+            
+            taskWarehouse = loadTasksFromStorage();
+            updateUIAndSync(taskWarehouse);
+            generateShowcase();
+        }
+
+        function generateShowcase() {
+            Object.entries(personaData).forEach(([key, data]) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h2>${data.name}</h2>
+                    <div class="persona-card" style="align-items: start;">
+                        <div class="device-preview" style="position: static; width: 200px; height: 200px;">
+                             <canvas id="canvas-${key}" width="200" height="200"></canvas>
+                        </div>
+                        <div id="showcase-list-${key}"></div>
+                    </div>
+                `;
+                showcaseContainer.appendChild(card);
+                const canvas = document.getElementById(`canvas-${key}`);
+                renderImageOnCanvas(canvas, data.tasks);
+
+                const listContainer = document.getElementById(`showcase-list-${key}`);
+                listContainer.innerHTML = `
+                    <p class="status-text" style="margin-top:0;">AI为其规划的今日要务：</p>
+                    <ul class="agenda-list" style="font-size: 13px;">
+                        ${data.tasks.map(t => `<li class="agenda-item"><span class="agenda-item-text"><span class="time">${t.time}</span> ${t.summary}</span></li>`).join('')}
+                    </ul>
+                `;
+            });
+        }
+        
+        function addMicrophonePermission() {
+            const metadata = {
+              "requestFramePermissions": [
+                "microphone"
+              ]
+            };
+            const metadataStr = JSON.stringify(metadata);
+            const script = document.createElement('script');
+            script.type = 'application/json';
+            script.id = 'web-sdk-metadata';
+            script.textContent = metadataStr;
+            document.head.appendChild(script);
+        }
+
+        document.addEventListener('DOMContentLoaded', initialize);
+
+    </script>
+</body>
+</html>
