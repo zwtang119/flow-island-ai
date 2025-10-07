@@ -105,7 +105,7 @@
 <h1 id="en" align="center">🏝️ Flow-Island</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-ai/main/docs/screenshots/flow-island-cover.png" width="350" alt="Flow-Island Product Logo and Device Render">
+  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-ai/main/docs/screenshots/flow-island-cover.png" width="850" alt="Flow-Island Product Logo and Device Render">
 </p>
 
 <p align="center">
