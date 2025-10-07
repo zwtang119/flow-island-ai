@@ -6,7 +6,9 @@
 
 <h1 id="zh" align="center">🏝️ Flow-Island · 心流静岛</h1>
 
-
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-ai/main/docs/screenshots/flow-island-cover.png" width="850" alt="心流静岛 (Flow-Island) 产品Logo与设备渲染图">
+</p>
 
 <p align="center">
   <em>让重要的事，被听见、被理解、被静静呈现。</em>
