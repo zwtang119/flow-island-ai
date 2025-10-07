@@ -7,7 +7,7 @@
 <h1 id="zh" align="center">🏝️ Flow-Island · 心流静岛</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-demo/main/docs/screenshots/flow-island-cover.png" width="350" alt="心流静岛 (Flow-Island) 产品Logo与设备渲染图">
+  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-ai/main/docs/screenshots/flow-island-cover.png" width="350" alt="心流静岛 (Flow-Island) 产品Logo与设备渲染图">
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="https://zwtang119.github.io/flow-island-demo/" style="display: inline-block; padding: 12px 24px; background-color: #4A6A8F; color: white; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 16px;">
+  <a href="https://zwtang119.github.io/flow-island-ai/" style="display: inline-block; padding: 12px 24px; background-color: #4A6A8F; color: white; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 16px;">
     👉 访问品牌主站，感受守望
   </a>
 </p>
@@ -53,7 +53,7 @@
 
 | 模块 | 说明 | 入口 |
 | :--- | :--- | :--- |
-| **`(根目录)`** | ❤️ **品牌主站**：产品的灵魂归宿，一个为家庭守望而生的概念站 | **[访问主站](https://zwtang119.github.io/flow-island-demo/)** |
+| **`(根目录)`** | ❤️ **品牌主站**：产品的灵魂归宿，一个为家庭守望而生的概念站 | **[访问主站](https://zwtang119.github.io/flow-island-ai/)** |
 | **`flow-island-core/`** | 🧠 **核心产品**：为高效能人士打造的专注力工具 (需要自备API Key) | **[查看代码](./flow-island-core/)** |
 | **`ai-sticky-note-legacy/`**| 🕰️ **前身归档**：一切开始的地方，“AI便利贴”的技术原型 | **[查看代码](./ai-sticky-note-legacy/)** |
 | **`docs/`** | 📚 **文档中心**：项目的“真理之源”，包含故事、架构、路线图等 | **[查看文档](./docs/)** |
@@ -96,7 +96,7 @@
 
 ### 🤝 贡献与讨论
 
-欢迎所有开发者 Fork 本项目进行改进，或在 **[Issues](https://github.com/zwtang119/flow-island-demo/issues)** 中提出宝贵的建议。
+欢迎所有开发者 Fork 本项目进行改进，或在 **[Issues](https://github.com/zwtang119/flow-island-ai/issues)** 中提出宝贵的建议。
 你的每一次反馈，都将帮助“心流静岛”变得更实用、更温暖。
 
 ---
@@ -105,7 +105,7 @@
 <h1 id="en" align="center">🏝️ Flow-Island</h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-demo/main/docs/screenshots/flow-island-cover.png" width="350" alt="Flow-Island Product Logo and Device Render">
+  <img src="https://raw.githubusercontent.com/zwtang119/flow-island-ai/main/docs/screenshots/flow-island-cover.png" width="350" alt="Flow-Island Product Logo and Device Render">
 </p>
 
 <p align="center">
@@ -118,7 +118,7 @@ Flow Island is an AI-powered mindful companion for seniors — turning calm tech
 
 
 <p align="center">
-  <a href="https://zwtang119.github.io/flow-island-demo/" style="display: inline-block; padding: 12px 24px; background-color: #4A6A8F; color: white; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 16px;">
+  <a href="https://zwtang119.github.io/flow-island-ai/" style="display: inline-block; padding: 12px 24px; background-color: #4A6A8F; color: white; text-decoration: none; font-weight: bold; border-radius: 8px; font-size: 16px;">
     👉 Visit the Brand Website & Experience the Watchful Care
   </a>
 </p>
@@ -152,7 +152,7 @@ This project uses a Mono-Repo structure to manage all sub-projects and documenta
 
 | Module | Description | Entry Point |
 | :--- | :--- | :--- |
-| **`(Root Directory)`** | ❤️ **Brand Website**: The project's spiritual home, a concept site born to watch over families. | **[Visit Website](https://zwtang119.github.io/flow-island-demo/)** |
+| **`(Root Directory)`** | ❤️ **Brand Website**: The project's spiritual home, a concept site born to watch over families. | **[Visit Website](https://zwtang119.github.io/flow-island-ai/)** |
 | **`flow-island-core/`** | 🧠 **Core Product**: A focus tool for high-performance individuals (requires your own API Key). | **[View Code](./flow-island-core/)** |
 | **`ai-sticky-note-legacy/`**| 🕰️ **Legacy Archive**: Where it all began, the technical prototype of the "AI Sticky Note". | **[View Code](./ai-sticky-note-legacy/)** |
 | **`docs/`** | 📚 **Documentation Hub**: The project's "source of truth," containing its story, architecture, roadmap, etc. | **[View Docs](./docs/)** |
@@ -194,5 +194,5 @@ We believe the best smart devices don't replace people—they bring peace of min
 
 ### 🤝 Contributing & Discussion
 
-All developers are welcome to fork this project for improvements or to raise valuable suggestions in the **[Issues](https://github.com/zwtang119/flow-island-demo/issues)** section.
+All developers are welcome to fork this project for improvements or to raise valuable suggestions in the **[Issues](https://github.com/zwtang119/flow-island-ai/issues)** section.
 Every piece of your feedback helps make Flow-Island more practical and warmer.
